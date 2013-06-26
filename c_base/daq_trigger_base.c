@@ -49,7 +49,7 @@ void acquire(void (*pyCallbackFunc)(float64[data_per_trigger]))
     int32       error = 0;
     TaskHandle  taskHandle = 0;
     char        errBuff[2048]={'\0'};
-    int32       i;
+    //   int32       i;
     time_t      startTime;
 
     // Channel parameters
@@ -128,9 +128,9 @@ void acquire(void (*pyCallbackFunc)(float64[data_per_trigger]))
         printf("Acquired %ld samples. Total %ld\n",pointsRead,totalRead);
 	//	printf("Time acquired %f \n", time);
 
-        for (i = 0; i < bufferSize; ++i)   {
-	  printf ("data[%ld] = %f\n", i, data[i]); 
-	} 
+        /* for (i = 0; i < bufferSize; ++i)   { */
+	/*   printf ("data[%ld] = %f\n", i, data[i]);  */
+	/* }  */
 
 	// callback to python to present data
 	if(userData.contReport)

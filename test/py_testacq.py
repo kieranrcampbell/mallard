@@ -8,18 +8,39 @@ kieran.renfrew.campbell@cern.ch
 
 import ctypes
 import ctypes.util
-from ctypes import *
 import numpy as np
+import sys
+
+from ctypes import *
+from pylab import *
+
+all_data = None
+data_points = 0
 
 """
 Function called when data is received.
 'length' is the number of measurments per trigger
 """
 def data_callback(data, length):
-    data_array = np.fromiter(data, dtype=np.float, count=length)
-    print data_array
+    global all_data
+    global data_points
+    data_array = np.fromiter(data, dtype=np.float64, count=length)
+    all_data = np.hstack([all_data, data_array])
+    data_points += length
+
+"""
+Plot all data captured
+"""
+def plot_data():
+    global data_points
+    X = np.arange( data_points)
+    plot(X, all_data)
+    show()
 
 if __name__ == "__main__":
+    # initialise data
+    all_data = np.zeros([1,]) #zeros((,), dtype=np.float64)
+
     # import 2 required shared libraries
     ctypes.CDLL(ctypes.util.find_library("lvrtdark"), 
                 mode=ctypes.RTLD_GLOBAL)
@@ -37,7 +58,7 @@ if __name__ == "__main__":
 
     # set up user settings
     sampleRate = c_double(1000)
-    noTriggers = c_ulong(10)
+    noTriggers = c_ulong(25)
     channel = "/Dev1/ai8"
     triggerSource = "/Dev1/PFI0"
     report = c_bool(True)
@@ -58,3 +79,9 @@ if __name__ == "__main__":
     
     # acquire data
     daqtriggerbase.acquire(cb_func)
+
+    # trim the initial 0 from the start of all_data
+    all_data = np.trim_zeros(all_data, 'f')
+
+    # plot measured data
+    plot_data()
