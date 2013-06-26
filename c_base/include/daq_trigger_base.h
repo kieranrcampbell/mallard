@@ -10,7 +10,7 @@
 
 #include "NIDAQmxBase.h"
 
-#define data_per_trigger 10
+#define data_per_trigger 5
 
 
 /*

@@ -57,11 +57,11 @@ if __name__ == "__main__":
     daqtriggerbase.acquire.restype = None
 
     # set up user settings
-    sampleRate = c_double(1000)
-    noTriggers = c_ulong(25)
+    sampleRate = c_double(10000)
+    noTriggers = c_ulong(5)
     channel = "/Dev1/ai8"
     triggerSource = "/Dev1/PFI0"
-    report = c_bool(True)
+    report = c_bool(False)
     
     # set parameters
     daqtriggerbase.setParameters(channel, sampleRate,
@@ -84,4 +84,4 @@ if __name__ == "__main__":
     all_data = np.trim_zeros(all_data, 'f')
 
     # plot measured data
-    plot_data()
+    #plot_data()

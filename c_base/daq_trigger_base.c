@@ -6,13 +6,17 @@
  */
 
 
-#include "NIDAQmxBase.h"
-#include "daq_trigger_base.h"
 #include <stdio.h>
 #include <time.h>
+#include <sys/time.h>
 #include <unistd.h>
 #include <stdlib.h>
 #include <string.h>
+
+
+#include "NIDAQmxBase.h"
+#include "daq_trigger_base.h"
+#include "eltime.h"
 
 #define DAQmxErrChk(functionCall) { if( DAQmxFailed(error=(functionCall)) ) { goto Error; } }
 
@@ -72,6 +76,9 @@ void acquire(void (*pyCallbackFunc)(float64[data_per_trigger]))
     float64     timeout = 10.0;
     int32       totalRead = 0;
 
+    // Timing stuff
+    struct timeval tvBegin, tvEnd, tvDiff;
+
 
     char taskCreate[] = "Creating base task\n";
     char voltageCreate[] = "Creating voltage channel\n";
@@ -110,38 +117,43 @@ void acquire(void (*pyCallbackFunc)(float64[data_per_trigger]))
 					      triggerSlope));
 
     startTime = time(NULL);
+
+    // Begin loop time
+    gettimeofday(&tvBegin, NULL);
  
     /* Loop for desired number of triggers or infinitely if set to -1 */
-    for(; count < userData.noTriggers || userData.noTriggers == -1; ++count) 
-      {
-      	DAQmxErrChk (DAQmxBaseStartTask(taskHandle));
+    for(; count < userData.noTriggers || userData.noTriggers == -1; ++count) {
 
-        DAQmxErrChk (DAQmxBaseReadAnalogF64(taskHandle,
-					    pointsToRead,
-					    timeout,
-					    DAQmx_Val_GroupByScanNumber,
-					    data,
-					    bufferSize,
-					    &pointsRead,NULL));
+      // start and read data
+      DAQmxErrChk (DAQmxBaseStartTask(taskHandle));
+      DAQmxErrChk (DAQmxBaseReadAnalogF64(taskHandle,
+					  pointsToRead,
+					  timeout,
+					  DAQmx_Val_GroupByScanNumber,
+					  data,
+					  bufferSize,
+					  &pointsRead,NULL));
 
-        totalRead += pointsRead;
-        printf("Acquired %ld samples. Total %ld\n",pointsRead,totalRead);
-	//	printf("Time acquired %f \n", time);
+      totalRead += pointsRead;
+      printf("Level %d \n", count);
 
-        /* for (i = 0; i < bufferSize; ++i)   { */
-	/*   printf ("data[%ld] = %f\n", i, data[i]);  */
-	/* }  */
+      // callback to python to present data
+      if(userData.contReport)
+	pyCallbackFunc(data);
 
-	// callback to python to present data
-	if(userData.contReport)
-	  pyCallbackFunc(data);
+      /* // stop task */
+      DAQmxErrChk (DAQmxBaseStopTask(taskHandle));
 
-	DAQmxErrChk (DAQmxBaseStopTask(taskHandle));
-	DAQmxErrChk (DAQmxBaseCfgDigEdgeStartTrig(taskHandle,
-						  userData.triggerSource,
-						  triggerSlope));
+      DAQmxErrChk (DAQmxBaseCfgDigEdgeStartTrig(taskHandle,
+      						userData.triggerSource,
+      						triggerSlope));
 
     }
+
+    // work out time difference & print
+    gettimeofday(&tvEnd, NULL);
+    timeval_subtract(&tvDiff, &tvEnd, &tvBegin);
+    printf("%ld.%06ld\n", tvDiff.tv_sec, tvDiff.tv_usec);
 
     /* stop & delete task */
     DAQmxErrChk (DAQmxBaseStopTask(taskHandle));
