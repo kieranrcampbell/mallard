@@ -9,7 +9,15 @@ kieran.renfrew.campbell@cern.ch
 import ctypes
 import ctypes.util
 from ctypes import *
+import numpy as np
 
+"""
+Function called when data is received.
+'length' is the number of measurments per trigger
+"""
+def data_callback(data, length):
+    data_array = np.fromiter(data, dtype=np.float, count=length)
+    print data_array
 
 if __name__ == "__main__":
     # import 2 required shared libraries
@@ -32,13 +40,21 @@ if __name__ == "__main__":
     noTriggers = c_ulong(10)
     channel = "/Dev1/ai8"
     triggerSource = "/Dev1/PFI0"
+    report = c_bool(True)
     
     # set parameters
     daqtriggerbase.setParameters(channel, sampleRate,
-                                 triggerSource, noTriggers)
+                                 triggerSource, noTriggers,
+                                 report)
 
     # check parameters set correctly
     daqtriggerbase.printAllInfo()
 
+    # initialise callback function
+    CB_CALLBACK_TYPE = CFUNCTYPE(None, POINTER(c_double), c_uint)
+    cb_func = CB_CALLBACK_TYPE(data_callback)
+
+    
+    
     # acquire data
-    daqtriggerbase.acquire()
+    daqtriggerbase.acquire(cb_func)

@@ -16,7 +16,6 @@
 
 #define DAQmxErrChk(functionCall) { if( DAQmxFailed(error=(functionCall)) ) { goto Error; } }
 
-#define samplesPerRead 10
 
 /*
   channel: channel for analogue data acquisition (eg "/Dev1/ai8")
@@ -24,13 +23,16 @@
   triggerSource: channel for the trigger (eg "/Dev1/PFI0")
   noTriggers: number of triggers to record data for. If -1 loop is infinite */  
 void setParameters(char* channel, float64 sampleRate, 
-		   char* triggerSource, int noTriggers) {
+		   char* triggerSource, int noTriggers,
+		   _Bool contReport) {
 
   strcpy (userData.channel, channel);
   strcpy(userData.triggerSource, triggerSource);
 
   userData.sampleRate = sampleRate;
   userData.noTriggers = noTriggers;
+
+  userData.contReport = contReport;
 }
 
 void printAllInfo(void) {
@@ -38,9 +40,10 @@ void printAllInfo(void) {
   printf("Trigger source: %s \n", userData.triggerSource);
   printf("Sample rate: %f \n", userData.sampleRate);
   printf("Numer of triggers: %d \n", userData.noTriggers);
+  printf("Continuous reporting: %d \n", userData.contReport);
 }
 
-void acquire(void)
+void acquire(void (*pyCallbackFunc)(float64[data_per_trigger]))
 {
     // Task parameters
     int32       error = 0;
@@ -56,13 +59,13 @@ void acquire(void)
 
     // Timing parameters
     char        clockSource[] = "OnboardClock";
-    uInt64      samplesPerChan = samplesPerRead; // only using 1 channel
+    uInt64      samplesPerChan = data_per_trigger; // only using 1 channel
     
     // Triggering parameters
     uInt32      triggerSlope = DAQmx_Val_RisingSlope;
 
     // Data read parameters
-    #define     bufferSize (uInt32)samplesPerRead
+    #define     bufferSize (uInt32)data_per_trigger
     float64     data[bufferSize];
     int32       pointsToRead = bufferSize;
     int32       pointsRead;
@@ -129,7 +132,9 @@ void acquire(void)
 	  printf ("data[%ld] = %f\n", i, data[i]); 
 	} 
 
-	printf("Pass: %i \n", count);
+	// callback to python to present data
+	if(userData.contReport)
+	  pyCallbackFunc(data);
 
 	DAQmxErrChk (DAQmxBaseStopTask(taskHandle));
 	DAQmxErrChk (DAQmxBaseCfgDigEdgeStartTrig(taskHandle,
