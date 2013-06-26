@@ -1,4 +1,6 @@
 Data acquisition for ISOLDE@CERN
 
-kieranrcampbell@gmail.com / kieran.renfrew.campbell@cern.ch
+kieranrcampbell / kieran.renfrew.campbell
+		@
+gmail.com		cern.ch
 
