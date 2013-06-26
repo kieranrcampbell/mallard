@@ -8,6 +8,7 @@
 #ifndef DAQ_TRIGGER_BASE_H
 #define DAQ_TRIGGER_BASE_H
 
+#include "NIDAQmxBase.h"
 
 /*
   Defines all parameters which need to be passed to here at runtime

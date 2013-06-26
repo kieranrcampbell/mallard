@@ -38,24 +38,42 @@ class AITask(NITask):
 
         chan = ", ".join(self.channels)
 	
-	self.CHK(self.nidaq.DAQmxBaseCreateTask("",ctypes.byref(self.taskHandle)))
-	self.CHK(self.nidaq.DAQmxBaseCreateAIVoltageChan(self.taskHandle, chan, "", DAQmx_Val_RSE, float64(self.min), float64(self.max), DAQmx_Val_Volts, None))
+	self.CHK(
+            self.nidaq.DAQmxBaseCreateTask("",ctypes.byref(self.taskHandle)))
+	self.CHK(self.nidaq.DAQmxBaseCreateAIVoltageChan(self.taskHandle, 
+                                                         chan, 
+                                                         "", 
+                                                         DAQmx_Val_RSE, 
+                                                         float64(self.min),
+                                                         float64(self.max),
+                                                         DAQmx_Val_Volts, 
+                                                         None))
         if self.totalSamples:
             self.CHK(self.nidaq.DAQmxBaseCfgSampClkTiming(self.taskHandle, self.clockSource, float64(self.sampleRate), DAQmx_Val_Rising, DAQmx_Val_FiniteSamps, uInt64(self.totalSamples)))
+        
         else:
-            self.CHK(self.nidaq.DAQmxBaseCfgSampClkTiming(self.taskHandle, self.clockSource, float64(self.sampleRate), DAQmx_Val_Rising, DAQmx_Val_ContSamps, uInt64(self.samplesPerChan)))
+            self.CHK(
+                self.nidaq.DAQmxBaseCfgSampClkTiming(self.taskHandle, 
+                                                     self.clockSource, 
+                                                     float64(self.sampleRate), 
+                                                     DAQmx_Val_Rising, 
+                                                     DAQmx_Val_ContSamps, 
+                                                     uInt64(self.samplesPerChan)))
 
     def read(self, samplesPerChan=None):
         if samplesPerChan is None:
 	    samplesPerChan = self.samplesPerChan
-	data = numpy.zeros((samplesPerChan,self.numChan),dtype=numpy.float64)
+	
+        data = numpy.zeros((samplesPerChan,self.numChan),dtype=numpy.float64)
 	nRead = int32()
 	self.CHK(self.nidaq.DAQmxBaseReadAnalogF64(self.taskHandle,
-                                                   int32(samplesPerChan),float64(self.timeout),
+                                                   int32(samplesPerChan),
+                                                   float64(self.timeout),
                                                    DAQmx_Val_GroupByScanNumber,
-                                                   data.ctypes.data,samplesPerChan*self.numChan,
+                                                   data.ctypes.data,
+                                                   samplesPerChan*self.numChan,
                                                    ctypes.byref(nRead),None))
-	#print "Acquired %d samples for %d channels." % (nRead.value, self.numChan)
+	print "Acquired %d samples for %d channels." % (nRead.value, self.numChan)
         if nRead.value != samplesPerChan:
             print "Expected %d samples! Attempting to resize." % samplesPerChan
             data.resize((nRead.value, self.numChan))

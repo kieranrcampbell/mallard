@@ -36,7 +36,7 @@ void setParameters(char* channel, float64 sampleRate,
 void printAllInfo(void) {
   printf("Channel: %s \n", userData.channel);
   printf("Trigger source: %s \n", userData.triggerSource);
-  printf("Sample rate: %d \n", userData.sampleRate);
+  printf("Sample rate: %f \n", userData.sampleRate);
   printf("Numer of triggers: %d \n", userData.noTriggers);
 }
 
@@ -74,7 +74,6 @@ void acquire(void)
     char voltageCreate[] = "Creating voltage channel\n";
     char configTiming[] = "Configuring device timing\n";
     char configTrig[] = "Configuring rising edge trigger\n";
-    char startingTask[] = "Starting daq task\n";
 
     int count = 0;
     
@@ -124,7 +123,7 @@ void acquire(void)
 
         totalRead += pointsRead;
         printf("Acquired %ld samples. Total %ld\n",pointsRead,totalRead);
-	printf("Time acquired %f \n", time);
+	//	printf("Time acquired %f \n", time);
 
         for (i = 0; i < bufferSize; ++i)   {
 	  printf ("data[%ld] = %f\n", i, data[i]); 
@@ -157,15 +156,4 @@ Error:
     
 }
 
-/* int main(void) { */
-
-/*   /\* Testing *\/ */
-/*   printf("Setting parameters\n"); */
-/*   setParameters("/Dev1/ai8", 1000, "/Dev1/PFI0", 10); */
-
-
-/*   printf("Beginning acquire\n"); */
-/*   acquire(); */
-
-/* } */
 

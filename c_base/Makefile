@@ -1,15 +1,15 @@
 nilibs=-lnidaqmxbase
 includes=-I./include
-flags= -O2 -m32
+flags1= -c -Wall -fPIC
 ldflags= -shared
 cc=gcc
+output=libdaqtriggerbase
 
-build_files = daq_trigger_base
+target = daq_trigger_base
       
-all : $(build_files)
-
-% : %.c
-	$(cc) $(ldflags) $(includes) $(flags) $< $(nilibs) -o $@.so
+all : 
+	$(cc)  $(includes) $(flags1) $(target).c $(nilibs) 
+	$(cc) $(ldflags) -o $(output).so $(target).o
 
 clean :
-	rm -f $(ao_examples)
+	rm -f $(target).o $(target).so
