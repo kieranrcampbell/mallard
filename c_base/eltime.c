@@ -21,8 +21,8 @@ int timeval_subtract(struct timeval *result, struct timeval *t2, struct timeval 
 
 void timeval_print(struct timeval *tv)
 {
-    char buffer[30];
-    time_t curtime;
+    /* char buffer[30]; */
+    /* time_t curtime; */
 
     printf("%ld.%06ld", tv->tv_sec, tv->tv_usec);
     /* curtime = tv->tv_sec; */

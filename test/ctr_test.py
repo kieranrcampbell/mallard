@@ -14,32 +14,34 @@ import sys
 from ctypes import *
 from pylab import *
 
-all_data = None
-data_points = 0
+data_count = []
+prev_count = 0
 
 """
 Function called when data is received.
-'length' is the number of measurments per trigger
 """
-def data_callback(data, length):
-    global all_data
-    global data_points
-    data_array = np.fromiter(data, dtype=np.float64, count=length)
-    all_data = np.hstack([all_data, data_array])
-    data_points += length
+def data_callback(data):
+    global data_count, prev_count
+
+    data_count.append(data - prev_count)
+    prev_count = data
+
+    # global all_data
+    # global data_points
+    # data_array = np.fromiter(data, dtype=np.float64, count=length)
+    # all_data = np.hstack([all_data, data_array])
+    # data_points += length
 
 """
 Plot all data captured
 """
-def plot_data():
-    global data_points
-    X = np.arange( data_points)
-    plot(X, all_data)
+def plot_data(data):
+    X = np.arange( len(data) )
+    plot(X, data)
     show()
 
 if __name__ == "__main__":
-    # initialise data
-    all_data = np.zeros([1,]) #zeros((,), dtype=np.float64)
+    global data_count
 
     # import 2 required shared libraries
     ctypes.CDLL(ctypes.util.find_library("lvrtdark"), 
@@ -58,28 +60,25 @@ if __name__ == "__main__":
 
     # set up user settings
     channel = "/Dev1/ctr1" # virtual counter channel
-    triggerSource = "/Dev1/PFI0"
-    report = c_bool(False)
+    report = c_bool(True) # report data back to python
+    report_every = c_int(1)
     
     # set parameters
-    daqtriggerbase.setParameters(channel, sampleRate,
-                                 triggerSource, noTriggers,
-                                 report)
+    daqtriggerbase.setParameters(channel, report, report_every)
 
     # check parameters set correctly
     daqtriggerbase.printAllInfo()
 
     # initialise callback function
-    CB_CALLBACK_TYPE = CFUNCTYPE(None, POINTER(c_double), c_uint)
+    CB_CALLBACK_TYPE = CFUNCTYPE(None, c_uint)
     cb_func = CB_CALLBACK_TYPE(data_callback)
 
-    
     
     # acquire data
     daqtriggerbase.acquire(cb_func)
 
-    # trim the initial 0 from the start of all_data
-    all_data = np.trim_zeros(all_data, 'f')
+    # print count
 
-    # plot measured data
-    #plot_data()
+
+    data = array(data_count)
+    plot_data(data)
