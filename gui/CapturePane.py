@@ -9,13 +9,18 @@ kieran.renfrew.campbell@cern.ch
 
 import wx
 
+from core import CaptureSession
+
 class CapturePane(wx.Panel):
     """ 
-    Represents an individual page in CaptureNotebook
+    Represents an individual tab in CaptureNotebook
     """
     def __init__(self, parent):
         wx.Panel.__init__(self, parent = parent,
                           id = wx.ID_ANY)
+
+        # main session that does all analysis
+        self.session = CaptureSession()
 
 
     def createPanel(self):
@@ -80,3 +85,10 @@ class CapturePane(wx.Panel):
         a particular tab
         """
         print "Trying to change settings"
+        # self.session.changeSettings()
+
+    def getSession(self):
+        """
+        Returns the main CaptureSession running
+        """
+        return self.session
