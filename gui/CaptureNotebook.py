@@ -33,7 +33,11 @@ class CaptureNotebook(wx.Notebook):
         self.AddPage(tab, title)
         self.SetSelection(self.GetPageCount() - 1)
 
-        tabs.append(tab)
+        self.tabs.append(tab)
 
     def getTabList(self):
-        return tabs
+        return self.tabs
+
+    def getOpenTab(self):
+        return self.tabs[self.GetSelection()]
+

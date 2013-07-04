@@ -72,3 +72,11 @@ class CapturePane(wx.Panel):
 
         dlg.ShowModal() 
         dlg.Destroy()        
+
+
+    def changeSettings(self):
+        """
+        Called to change settings in
+        a particular tab
+        """
+        print "Trying to change settings"

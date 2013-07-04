@@ -58,23 +58,42 @@ class MFrame(wx.Frame):
         """
         # menu stuff
         menubar = wx.MenuBar()
-        fileMenu = wx.Menu()
 
-        
+        # File menu
+        fileMenu = wx.Menu()
         fileNewCapture = fileMenu.Append(wx.ID_NEW, "New Capture",
                                          "New Capture")
         fileSaveCapture = fileMenu.Append(wx.ID_SAVE, "Save Capture",
                                           "Save Capture")
+        fileOpenCapture = fileMenu.Append(wx.ID_ANY, 'Open Capture',
+                                          'Open existing capture')
         fileQuitItem = fileMenu.Append(wx.ID_EXIT,
                                        'Quit', 'Quit Application')
         
-
         menubar.Append(fileMenu, '&File')
+
+
+        # capture menu
+        captureMenu = wx.Menu()
+        captureSettings = captureMenu.Append(wx.ID_ANY, "Settings",
+                                          "Current Capture Settings")
+        menubar.Append(captureMenu, '&Capture')
+
         self.SetMenuBar(menubar)
 
+        # Graph menu
+        graphMenu = wx.Menu()
+        menubar.Append(graphMenu, '&Graph')
+
+        # file events
         self.Bind(wx.EVT_MENU, self.onNew, fileNewCapture)
         self.Bind(wx.EVT_MENU, self.onSave, fileSaveCapture)
+        self.Bind(wx.EVT_MENU, self.onCaptureOpen, fileOpenCapture)
         self.Bind(wx.EVT_MENU, self.onQuit, fileQuitItem)
+
+        # capture menu events
+        self.Bind(wx.EVT_MENU, self.onCaptureSettings,
+                  captureSettings)
 
     def createPanel(self):
         """
@@ -101,12 +120,26 @@ class MFrame(wx.Frame):
         """
         print ('Save capture')
 
-    
+    def onCaptureOpen(self, event):
+        """
+        Called to open an existing capture
+        """
+        
     def onQuit(self, event):
         """
         Called to exit program
         """
         self.Close()
+
+    def onCaptureSettings(self, event):
+        """
+        Called to edit a given capture's settings
+        """
+        if self.notebook.GetPageCount() == 0:
+            wx.MessageBox('No open captures', 'Error',
+                          wx.OK | wx.ICON_INFORMATION)
+        else:
+            self.notebook.getOpenTab().changeSettings()
 
 
 
