@@ -79,6 +79,9 @@ class MFrame(wx.Frame):
                                           "Current Capture Settings")
         menubar.Append(captureMenu, '&Capture')
 
+        changeName = captureMenu.Append(wx.ID_ANY, "Rename session",
+                                        "Rename current session")
+
         self.SetMenuBar(menubar)
 
         # Graph menu
@@ -94,6 +97,7 @@ class MFrame(wx.Frame):
         # capture menu events
         self.Bind(wx.EVT_MENU, self.onCaptureSettings,
                   captureSettings)
+        self.Bind(wx.EVT_MENU, self.onChangeName, changeName)
 
     def createPanel(self):
         """
@@ -141,6 +145,17 @@ class MFrame(wx.Frame):
                           wx.OK | wx.ICON_INFORMATION)
         else:
             self.notebook.getOpenTab().changeSettings()
+
+    def onChangeName(self, event):
+        name = self.notebook.getOpenTab().session.getName()
+        dlg = wx.TextEntryDialog(
+            self, 'Enter new name', 'Rename', name)
+
+        if dlg.ShowModal() == wx.ID_OK:
+            name = dlg.GetValue()
+            self.notebook.getOpenTab().session.setName(name)
+            self.notebook.SetPageText(
+                self.notebook.GetSelection(), name )
 
 
 

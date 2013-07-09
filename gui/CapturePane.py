@@ -51,7 +51,7 @@ class CapturePane(wx.Panel):
 
         # upper (display) box
         self.upperBox = wx.BoxSizer(wx.HORIZONTAL)
-        self.settingsSizer = wx.BoxSizer(wx.VERTICAL)
+        self.settingsSizer = wx.GridSizer(2, 1, 5, 5)
         self.createDisplayBox()
 
         # control box
@@ -60,12 +60,13 @@ class CapturePane(wx.Panel):
                                      size=(120, 30))
         self.startButton.Bind(wx.EVT_BUTTON, self.onStartCapture)
         self.bottomControlBox.Add(self.startButton, 1,
-                                  flag = wx.ALIGN_RIGHT, border = 10)
+                                  flag = wx.ALL | wx.ALIGN_BOTTOM | \
+                                      wx.ALIGN_RIGHT, border = 10)
  
 
         # add all sizers
         self.vbox.Add(self.upperBox, 
-                      flag = wx.ALL |wx.ALIGN_LEFT | wx.ALIGN_TOP,
+                      flag = wx.ALL ,
                       border = 10)
 
         self.vbox.Add(self.bottomControlBox,
@@ -75,6 +76,7 @@ class CapturePane(wx.Panel):
         self.vbox.Fit(self)
 
 
+    
     def createDisplayBox(self):
         """ 
         Creates the upper settings & graph display
@@ -86,14 +88,15 @@ class CapturePane(wx.Panel):
 
         self.settingsButton.Bind(wx.EVT_BUTTON, self.btnChangeSettings)
 
-        self.settingsSizer.Add(self.settingsBox, 1, 
-                               wx.ALL | wx.ALIGN_LEFT, 5)
-        self.settingsSizer.Add(self.settingsButton, 1,
-                               wx.ALL | wx.ALIGN_LEFT, 5)
-        self.setSettings(self.session.settings)
+        self.settingsSizer.AddMany( [ (self.settingsBox, 0, wx.ALIGN_LEFT),
+                                      (self.settingsButton, 0, 
+                                       wx.ALIGN_LEFT ) ] )
+
+        self.setSettings()
 
         self.upperBox.Add(self.settingsSizer,
-                          flag = wx.ALL | wx.ALIGN_TOP | wx.ALIGN_LEFT,
+                          flag = wx.ALL | wx.ALIGN_TOP | wx.ALIGN_LEFT\
+                              | wx.EXPAND,
                           border = 10)
 
     def drawFigure(self):
@@ -124,6 +127,7 @@ class CapturePane(wx.Panel):
         dlg.Destroy()        
 
 
+
     def onStartCapture(self, event):
         """
         Begin data capture
@@ -139,6 +143,9 @@ class CapturePane(wx.Panel):
                         
         sdlg.ShowModal()
         sdlg.Destroy()
+        self.session.settings = sdlg.getSettings()
+        self.setSettings()
+
 
     def btnChangeSettings(self, event):
         self.changeSettings()
@@ -149,19 +156,37 @@ class CapturePane(wx.Panel):
         """
         return self.session
 
-    def setSettings(self, settings):
+    def setSettings(self):
         """
         Creates the appropriate session settings in the listbox
         """
+        self.settingsBox.Clear()
+        
+        self.settingsBox.Insert("Input channel: " + \
+                                    str(self.session.settings.inputChannel),
+                                0)
+
+        self.settingsBox.Insert("Output channel: " + \
+                                    str(self.session.settings.outputChannel),  1)
+
         self.settingsBox.Insert("Cycles per volt: " + \
-                                       str(settings.clockCyclesPerVoltage), 0)
+                                    str(self.session.settings.clockCyclesPerVoltage), 
+                                2)
+        
         self.settingsBox.Insert( "Voltage min: " + \
-                                       str(settings.voltageMin), 1)
+                                     str(self.session.settings.voltageMin),
+                                 3)
+
         self.settingsBox.Insert( "Voltage max: " + \
-                                       str(settings.voltageMax), 2)
+                                     str(self.session.settings.voltageMax),
+                                 4)
+
         self.settingsBox.Insert( "Intervals per sweep: " + \
-                                       str(settings.intervalsPerSweep), 3)
+                                     str(self.session.settings.intervalsPerSweep), 
+                                 5)
+
         self.settingsBox.Insert( "Sweeps: " + \
-                                       str(settings.intervalsPerSweep), 4)
-                                   
+                                     str(self.session.settings.sweeps), 
+                                 6)
+        
 

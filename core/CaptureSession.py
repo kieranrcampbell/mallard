@@ -29,3 +29,14 @@ class CaptureSession:
         self.interface = cInterface(self.dmanager.dataCallback)
 
         self.settings = SessionSettings()
+
+
+
+    def setName(self, name):
+        """
+        Change the name of the current session
+        """
+        self.settings.name = name
+
+    def getName(self):
+        return self.settings.name
