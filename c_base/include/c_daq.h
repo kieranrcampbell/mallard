@@ -19,7 +19,6 @@
 struct UserData {
   char readChannel[256]; // analogue input channel
   char writeChannel[256];
-  _Bool contReport; // send captured data back after each trigger
 
   int reportEvery; // call back to python every ; not yet implemented
 
@@ -49,7 +48,7 @@ struct WriteData {
   reportEvery: callback to function every n loops
 
 */
-void setParameters(char* readChannel, char* writeChannel, _Bool contReport,
+void setParameters(char* readChannel, char* writeChannel, 
 		   int reportEvery);
 
 
@@ -57,7 +56,8 @@ void printAllInfo(void);
 
 /* Begins data acquisition */
 void acquire(void (*pyCallbackFunc)(uInt32),
-	     double (*pyVoltFunc)(uInt32));
+	     double (*pyVoltFunc)(uInt32),
+	     _Bool (*isFinished)(uInt32));
 
 
 #endif

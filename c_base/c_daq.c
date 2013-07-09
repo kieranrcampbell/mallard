@@ -21,7 +21,8 @@ static int gRunning;
 
 
 void acquire(void (*pyCallbackFunc)(uInt32),
-	     double (*pyVoltFunc)(uInt32)) {
+	     double (*pyVoltFunc)(uInt32),
+	     _Bool (*isFinished)(uInt32)) {
   // Task parameters
   int32       error = 0;
   //  TaskHandle  taskHandle = 0;
@@ -43,7 +44,8 @@ void acquire(void (*pyCallbackFunc)(uInt32),
   TaskHandle taskHandle = 0;
 
   float64 voltage = 0.0;
-  float64 newVoltage = 0.0;
+  uInt32 count = 0;
+  uInt32 previousCount = 0;
 
   writeParams.gtimeout = 10.0;
   writeParams.taskHandle = 0;
@@ -66,25 +68,24 @@ void acquire(void (*pyCallbackFunc)(uInt32),
 					   DAQmx_Val_Volts,NULL));
   DAQmxErrChk(DAQmxBaseStartTask(writeParams.taskHandle));
 
-
-
   // The loop will quit after 10 seconds
   startTime = time(NULL);
-  while( gRunning && time(NULL)<startTime+10 ) {
+
+  printf("Beginning main loop\n");
+  while( gRunning && !isFinished(0) ) {
+
+    // measure counts every time
     DAQmxErrChk (DAQmxBaseReadCounterScalarU32(taskHandle,
 					       timeout,&data,NULL));
-
-    /* callback to python */
-    if(userData.contReport)
-      pyCallbackFunc(data);
-
-    float64 gdata = 1.7;
-    uInt32 cnt = 0;
-    newVoltage = pyVoltFunc(cnt);
-    if(newVoltage != voltage) {
-      printf("voltage: %f \n", newVoltage);
-
-      voltage = newVoltage;
+    
+    if(count++ % userData.reportEvery == 0) {
+      /*
+	This represents the end of one complete voltage measure.
+	We report back the count, set data to 0, set the new voltage
+      */
+      
+      // set voltage
+      voltage = pyVoltFunc(0);
       DAQmxErrChk(DAQmxBaseWriteAnalogF64(writeParams.taskHandle,
 					  writeParams.samplesPerChan,0,
 					  writeParams.gtimeout,
@@ -93,11 +94,13 @@ void acquire(void (*pyCallbackFunc)(uInt32),
 					  &writeParams.gpointsWritten,
 					  NULL));
 
+      // read data
+      pyCallbackFunc(data - previousCount);
+      previousCount = data;
 
     }
-
+    
   }
-
 
 
  Error:
@@ -121,11 +124,10 @@ void acquire(void (*pyCallbackFunc)(uInt32),
 }
 
 void setParameters(char* readChannel, char* writeChannel, 
-		   _Bool contReport, int reportEvery) {
+		   int reportEvery) {
   strcpy (userData.readChannel, readChannel);
   strcpy (userData.writeChannel, writeChannel);
   
-  userData.contReport = contReport;
   userData.reportEvery = reportEvery; 
 
 }
@@ -133,7 +135,6 @@ void setParameters(char* readChannel, char* writeChannel,
 void printAllInfo(void) {
   printf("Write Channel: %s \n", userData.writeChannel);
   printf("Read Channel: %s \n", userData.readChannel);
-  printf("Continous reporting: %d \n", userData.contReport);
   printf("Report every: %ud \n", userData.reportEvery);
 }
 
