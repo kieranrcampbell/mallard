@@ -13,7 +13,7 @@ kieran.renfrew.campbell@cern.ch
 
 from cInterface import cInterface
 from DataManager import DataManager
-
+from SessionSettings import SessionSettings
 
 class CaptureSession:
     """
@@ -23,7 +23,9 @@ class CaptureSession:
         print ('Capture session created')
 
         self.dmanager = DataManager() # stores and manages data from the card
-        
+
         # set up c interface and provide callback function
         # in data manager
-        self.interface = cInterface(self.DataManager.dataCallback)
+        self.interface = cInterface(self.dmanager.dataCallback)
+
+        self.settings = SessionSettings()

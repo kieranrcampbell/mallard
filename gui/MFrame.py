@@ -102,7 +102,8 @@ class MFrame(wx.Frame):
         self.panel = wx.Panel(self)
         self.notebook = CaptureNotebook(self.panel)
         sizer = wx.BoxSizer(wx.VERTICAL)
-        sizer.Add(self.notebook, 1, wx.ALL | wx.EXPAND, 5)
+        sizer.Add(self.notebook, 1, flag = wx.ALL | wx.EXPAND, border=5)
+        self.notebook.addTab("new")
         self.panel.SetSizer(sizer)
         self.Layout()
 
