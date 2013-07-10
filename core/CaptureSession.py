@@ -22,14 +22,10 @@ class CaptureSession:
     Interfaces between card, gui and data buffers
     """    
     def __init__(self):
-        self.dmanager = DataManager() # stores and manages data from the card
-
-        # set up c interface and provide callback function
-        # in data manager
-        self.interface = cInterface(self.dmanager.dataCallback)
-
         self.settings = SessionSettings()
         self.fileManager = FileManager(self.settings)
+        self.dmanager = DataManager(self.settings) 
+        
 
     def setName(self, name):
         """
@@ -68,3 +64,16 @@ class CaptureSession:
         """
         self.settings.filename = path
         self.saveSession()
+
+    def startCapture(self):
+        self.settings.sanitise()
+        self.dmanager = DataManager(self.settings) 
+
+        # set up c interface and provide callback function
+        # in data manager
+        self.interface = cInterface(self.dmanager.dataCallback,
+                                    self.settings)
+
+        self.interface.acquire()
+        self.dmanager.combineCounts()
+        print "Finished capture"

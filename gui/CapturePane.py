@@ -132,7 +132,9 @@ class CapturePane(wx.Panel):
         """
         Begin data capture
         """
-        print "Beginning capture"
+        self.session.startCapture()
+
+
     def changeSettings(self):
         """
         Called to change settings in

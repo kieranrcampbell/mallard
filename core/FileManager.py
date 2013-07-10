@@ -47,7 +47,8 @@ class FileManager:
         """
         data = np.column_stack((volts, counts))
         np.savetxt(self.settings.filename, data, delimiter=",",
-                   header = self.constructHeader())
+                   header = self.constructHeader(),
+                   fmt = "%f %i")
         
     def loadData(self, fileName):
         """
