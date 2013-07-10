@@ -65,8 +65,20 @@ class MFrame(wx.Frame):
                                          "New Capture")
         fileSaveCapture = fileMenu.Append(wx.ID_SAVE, "Save Capture",
                                           "Save Capture")
+        fileSaveCaptureAs = fileMenu.Append(wx.ID_SAVE, "Save Capture As...",
+                                          "Save Capture As")
+
         fileOpenCapture = fileMenu.Append(wx.ID_ANY, 'Open Capture',
                                           'Open existing capture')
+
+        fileCloseCapture = fileMenu.Append(wx.ID_ANY, 'Close Capture',
+                                           'Close current capture')
+
+        fileMenu.AppendSeparator()
+        fileLoadSettings = fileMenu.Append(wx.ID_ANY, 'Load settings',
+                                           'Load settings into capture')
+        fileMenu.AppendSeparator()
+        
         fileQuitItem = fileMenu.Append(wx.ID_EXIT,
                                        'Quit', 'Quit Application')
         
@@ -91,7 +103,10 @@ class MFrame(wx.Frame):
         # file events
         self.Bind(wx.EVT_MENU, self.onNew, fileNewCapture)
         self.Bind(wx.EVT_MENU, self.onSave, fileSaveCapture)
+        self.Bind(wx.EVT_MENU, self.onSaveAs, fileSaveCaptureAs)
         self.Bind(wx.EVT_MENU, self.onCaptureOpen, fileOpenCapture)
+        self.Bind(wx.EVT_MENU, self.onClose, fileCloseCapture)
+        self.Bind(wx.EVT_MENU, self.onLoadSettings, fileLoadSettings)
         self.Bind(wx.EVT_MENU, self.onQuit, fileQuitItem)
 
         # capture menu events
@@ -107,7 +122,7 @@ class MFrame(wx.Frame):
         self.notebook = CaptureNotebook(self.panel)
         sizer = wx.BoxSizer(wx.VERTICAL)
         sizer.Add(self.notebook, 1, flag = wx.ALL | wx.EXPAND, border=5)
-        self.notebook.addTab("new")
+#        self.notebook.addTab("new")
         self.panel.SetSizer(sizer)
         self.Layout()
 
@@ -123,13 +138,79 @@ class MFrame(wx.Frame):
         """
         User has indicated capture save
         """
-        print ('Save capture')
+        if len(self.notebook.getTabList()) == 0:
+            wx.MessageBox('No open captures', 'Error',
+                          wx.OK | wx.ICON_INFORMATION)
+
+        else:
+            if self.notebook.getOpenTab().session.settings.name \
+                    is "":
+                self.onSaveAs(event)
+        
+            else:
+                self.notebook.getOpenTab().session.saveSession()
+
+    def onSaveAs(self, event):
+        """
+        Save capture as specific name
+        """
+        if len(self.notebook.getTabList()) == 0:
+            wx.MessageBox('No open captures', 'Error',
+                          wx.OK | wx.ICON_INFORMATION)
+
+        else:
+            name = self.notebook.getOpenTab().session.settings.name
+            saveFileDialog = wx.FileDialog(self, "Save As", "", name,
+                                           "CSV files (*.csv)|*.csv",
+                                           wx.FD_SAVE)
+            if saveFileDialog.ShowModal() == wx.ID_OK:
+                path = saveFileDialog.GetPath()
+                self.notebook.getOpenTab().session.saveSessionAs(path)
+                                       
 
     def onCaptureOpen(self, event):
         """
         Called to open an existing capture
         """
+        openFileDialog = wx.FileDialog(self, "Open", "", "", 
+                                       "CSV files (*.csv)|*.csv",
+                                       wx.FD_OPEN)
+        if openFileDialog.ShowModal() == wx.ID_OK:
+            path = openFileDialog.GetPath()
+
+            self.notebook.addTab("")
+            self.notebook.getLastTab().loadSessionFromFile(path)
+
+            self.notebook.SetPageText(
+                self.notebook.GetSelection(), 
+                self.notebook.getLastTab().session.getName() )
+
+
+    def onClose(self, event):
+        """
+        Called to close an open capture
+        """
+        self.notebook.closeTab()
+
         
+    def onLoadSettings(self, event):
+        """
+        Loads settings only from open file
+        """
+        openFileDialog = wx.FileDialog(self, "Open", "", "", 
+                                       "CSV files (*.csv)|*.csv",
+                                       wx.FD_OPEN)
+        if openFileDialog.ShowModal() == wx.ID_OK:
+            path = openFileDialog.GetPath()
+
+            self.notebook.addTab("")
+            self.notebook.getLastTab().loadSettingsFromFile(path)
+
+            self.notebook.SetPageText(
+                self.notebook.GetSelection(), 
+                self.notebook.getLastTab().session.getName() )
+
+
     def onQuit(self, event):
         """
         Called to exit program

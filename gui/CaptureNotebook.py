@@ -35,9 +35,25 @@ class CaptureNotebook(wx.Notebook):
 
         self.tabs.append(tab)
 
+    def closeTab(self):
+        selected = self.GetSelection()
+        self.DeletePage(selected)
+        del self.tabs[selected]
+
     def getTabList(self):
         return self.tabs
 
     def getOpenTab(self):
         return self.tabs[self.GetSelection()]
 
+    def getTab(self, n):
+        """ 
+        Returns the nth tab
+        """
+        return self.tabs[n]
+
+    def getLastTab(self):
+        """
+        Returns last tab opened
+        """
+        return self.tabs[-1]

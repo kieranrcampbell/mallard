@@ -34,6 +34,8 @@ class SessionSettings:
 
         self.name = "" # name of session
 
+        self.filename = "" # file name
+
     def sanitise(self):
         """ 
         makes sure the ints are ints and
@@ -47,3 +49,4 @@ class SessionSettings:
         self.inputChannel = str(self.inputChannel)
         self.outputChannel = str(self.outputChannel)
         self.name = str(self.name)
+        self.filename = str(self.filename)

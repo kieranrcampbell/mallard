@@ -13,25 +13,33 @@ import numpy as np
 class DataManager:
     
     def __init__(self):
-        self.data = []
-        self.prev_count = 0
+        self.voltage = None
+        self.counts = None
 
-    def dataCallback(lastData, callback = None):
+    def dataCallback(self, data):
         """
-        Function called when data is received.
+        Call back after counts
         """
-        data.append(lastData - prev_count)
-        prev_count = lastData
+
+    def setData(self, voltage, counts):
+        self.voltage = voltage
+        self.counts = counts
+
+    def getData(self):
         """
-        Plot all data captured
+        Returns voltage and counts column_stacked
         """
-        # def plot_data(data):
-        #     X = np.arange( len(data) )
-        #     plot(X, data)
-        #     show()
+        return np.column_stack((self.getVoltage(), 
+                                self.getCounts()))
+
+    def getVoltage(self):
+        if self.voltage == None:
+            return np.zeros( (1,1) )
+        return self.voltage
+
+    def getCounts(self):
+        if self.counts == None:
+            return np.zeros( (1,1) )
+        return self.counts
 
 
-    def getData():
-        """
-        Simply returns previous data list
-        """

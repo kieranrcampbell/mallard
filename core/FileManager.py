@@ -40,13 +40,13 @@ class FileManager:
         header.append('voltage,count')
         return "\n".join(header) + "\n"
 
-    def writeCapture(self,volts, counts, fileName):
+    def writeCapture(self,volts, counts):
         """
         Writes the capture to fileName.
         Note volts, counts should be numpy arrays
         """
         data = np.column_stack((volts, counts))
-        np.savetxt(fileName, data, delimiter=",",
+        np.savetxt(self.settings.filename, data, delimiter=",",
                    header = self.constructHeader())
         
     def loadData(self, fileName):

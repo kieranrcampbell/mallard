@@ -146,6 +146,21 @@ class CapturePane(wx.Panel):
         self.session.settings = sdlg.getSettings()
         self.setSettings()
 
+    def loadSessionFromFile(self, path):
+        """
+        Loads an entire session (settings + data)
+        from a file
+        """
+        self.loadSettingsFromFile(path)
+
+    def loadSettingsFromFile(self, path):
+        """
+        Loads just the settings from file
+        """
+        self.session.loadSession(path)
+        self.setSettings()
+
+
 
     def btnChangeSettings(self, event):
         self.changeSettings()
