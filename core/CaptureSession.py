@@ -14,6 +14,7 @@ kieran.renfrew.campbell@cern.ch
 from cInterface import cInterface
 from DataManager import DataManager
 from SessionSettings import SessionSettings
+from FileManager import FileManager
 
 class CaptureSession:
     """
@@ -29,7 +30,9 @@ class CaptureSession:
         self.interface = cInterface(self.dmanager.dataCallback)
 
         self.settings = SessionSettings()
+        self.fileManager = FileManager(self.settings)
 
+        print self.fileManager.constructHeader() # csv settings
 
 
     def setName(self, name):
@@ -40,3 +43,5 @@ class CaptureSession:
 
     def getName(self):
         return self.settings.name
+
+

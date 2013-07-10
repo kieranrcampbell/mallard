@@ -9,10 +9,16 @@ kieran.renfrew.campbell@cern.ch
 import ctypes
 import ctypes.util
 import numpy as np
-import sys
+import os, sys
+
+
 
 from ctypes import *
 from pylab import *
+
+
+from ..core.FileManager import FileManager 
+from ..core.SessionSettings import SessionSettings
 
 
 class ctr_test:
@@ -23,19 +29,21 @@ class ctr_test:
         """
         let's set up some read parameters
         """
-        self.clockCyclesPerVoltage = 100
-        self.voltageMin = 0
-        self.voltageMax = 4
-        self.intervalsPerSweep = 50
-        self.sweeps = 2
+        self.settings = SessionSettings()
+        self.settings.clockCyclesPerVoltage = 100
+        self.settings.voltageMin = 0
+        self.settings.voltageMax = 4
+        self.settings.intervalsPerSweep = 50
+        self.settings.sweeps = 2
+        self.settings.name = 'mycapture'
 
-        self.voltsPerInterval = (self.voltageMax - self.voltageMin) \
-            / float(self.intervalsPerSweep)
+        self.voltsPerInterval = (self.settings.voltageMax - self.settings.voltageMin) \
+            / float(self.settings.intervalsPerSweep)
 
         print "Volts per interval: " + str(self.voltsPerInterval)
 
-        self.dataArray = np.zeros( (self.intervalsPerSweep, ) )
-        self.currentVoltage = self.voltageMin
+        self.dataArray = np.zeros( (self.settings.intervalsPerSweep, ) )
+        self.currentVoltage = self.settings.voltageMin
         self.currentSweep = 0
 
         self.finished = False # tell C we're finished
@@ -43,9 +51,9 @@ class ctr_test:
 
     def data_callback(self, data):
         """
-        Only called back every self.clockCyclesPerVoltage steps
+        Only called back every self.settings.clockCyclesPerVoltage steps
         """
-        slot = self.count % self.intervalsPerSweep # which voltage position?
+        slot = self.count % self.settings.intervalsPerSweep # which voltage position?
         self.dataArray[slot] += data # add count to correct voltage slot
         
         # could probably be done in more elegant way
@@ -54,7 +62,7 @@ class ctr_test:
 
         self.count += 1
 
-        if self.count == (self.intervalsPerSweep * self.sweeps):
+        if self.count == (self.settings.intervalsPerSweep * self.settings.sweeps):
             # we're done measuring
             self.finished = True
 
@@ -73,12 +81,15 @@ class ctr_test:
     Plot all data captured
     """
     def plot_data(self):
-        X = np.arange( self.voltageMin, self.voltageMax, 
+        X = np.arange( self.settings.voltageMin, self.settings.voltageMax, 
                        self.voltsPerInterval)
-        plot(X, self.dataArray)
-        ylabel('Count')
-        xlabel('Voltage (V)')
-        show()
+        # plot(X, self.dataArray)
+        # ylabel('Count')
+        # xlabel('Voltage (V)')
+        # show()
+        f = FileManager(self.settings)
+        f.writeCapture(X, self.dataArray, 
+                       self.settings.name + '.csv')
 
     def main(self):
 
@@ -102,9 +113,9 @@ class ctr_test:
         daqtriggerbase.acquire.restype = None
 
         # set up user settings
-        readChannel = "/Dev1/ctr1" # virtual self.counter channel
-        writeChannel = "/Dev1/ao0"
-        report_every = c_int(self.clockCyclesPerVoltage)
+        readChannel = self.settings.inputChannel#virtual self.counter channel
+        writeChannel = self.settings.outputChannel
+        report_every = c_int(self.settings.clockCyclesPerVoltage)
     
         # set parameters
         daqtriggerbase.setParameters(readChannel, writeChannel,
@@ -136,6 +147,11 @@ class ctr_test:
 
         print(self.dataArray)
         self.plot_data()
+
+        f = FileManager(self.settings)
+        s = f.getSettings(self.settings.name + '.csv')
+        print str(s.__dict__)
+
 
 if __name__ == "__main__":
     c = ctr_test()
