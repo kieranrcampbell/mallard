@@ -26,13 +26,13 @@ class SessionSettings:
         # number of voltages to record for per sweep
         self.intervalsPerSweep = 100
 
-        self.sweeps = 5
+        self.sweeps = 1
         
         self.inputChannel = "/Dev1/ctr1" # corresponds to PFI3
         
         self.outputChannel = "/Dev1/ao0"
 
-        self.name = "" # name of session
+        self.name = "new_capture" # name of session
 
         self.filename = "" # file name
 

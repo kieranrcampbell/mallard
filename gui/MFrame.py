@@ -12,12 +12,12 @@ from CapturePane import CapturePane
 from CaptureNotebook import CaptureNotebook
 
 
-matplotlib.use('WXAgg')
+#matplotlib.use('WXAgg')
 
-from matplotlib.figure import Figure
-from matplotlib.backends.backend_wxagg import \
-    FigureCanvasWxAgg as FigCanvas, \
-    NavigationToolbar2WxAgg as NavigationToolbar
+# from matplotlib.figure import Figure
+# from matplotlib.backends.backend_wxagg import \
+#     FigureCanvasWxAgg as FigCanvas, \
+#     NavigationToolbar2WxAgg as NavigationToolbar
 
 
 
@@ -98,6 +98,8 @@ class MFrame(wx.Frame):
 
         # Graph menu
         graphMenu = wx.Menu()
+        showGraph = graphMenu.Append(wx.ID_ANY, "Show graph", "Show graph")
+
         menubar.Append(graphMenu, '&Graph')
 
         # file events
@@ -114,6 +116,9 @@ class MFrame(wx.Frame):
                   captureSettings)
         self.Bind(wx.EVT_MENU, self.onChangeName, changeName)
 
+        # graph events
+        self.Bind(wx.EVT_MENU, self.onShowGraph, showGraph)
+
     def createPanel(self):
         """
         Creates main notebook
@@ -122,7 +127,6 @@ class MFrame(wx.Frame):
         self.notebook = CaptureNotebook(self.panel)
         sizer = wx.BoxSizer(wx.VERTICAL)
         sizer.Add(self.notebook, 1, flag = wx.ALL | wx.EXPAND, border=5)
-#        self.notebook.addTab("new")
         self.panel.SetSizer(sizer)
         self.Layout()
 
@@ -138,12 +142,9 @@ class MFrame(wx.Frame):
         """
         User has indicated capture save
         """
-        if len(self.notebook.getTabList()) == 0:
-            wx.MessageBox('No open captures', 'Error',
-                          wx.OK | wx.ICON_INFORMATION)
+        if self.assertOpenCapture():
 
-        else:
-            if self.notebook.getOpenTab().session.settings.name \
+            if self.notebook.getOpenTab().session.settings.filename \
                     is "":
                 self.onSaveAs(event)
         
@@ -154,13 +155,11 @@ class MFrame(wx.Frame):
         """
         Save capture as specific name
         """
-        if len(self.notebook.getTabList()) == 0:
-            wx.MessageBox('No open captures', 'Error',
-                          wx.OK | wx.ICON_INFORMATION)
+        if self.assertOpenCapture():
 
-        else:
             name = self.notebook.getOpenTab().session.settings.name
-            saveFileDialog = wx.FileDialog(self, "Save As", "", name,
+            saveFileDialog = wx.FileDialog(self, "Save As", "", 
+                                           name + '.csv',
                                            "CSV files (*.csv)|*.csv",
                                            wx.FD_SAVE)
             if saveFileDialog.ShowModal() == wx.ID_OK:
@@ -190,7 +189,8 @@ class MFrame(wx.Frame):
         """
         Called to close an open capture
         """
-        self.notebook.closeTab()
+        if self.assertOpenCapture():
+            self.notebook.closeTab()
 
         
     def onLoadSettings(self, event):
@@ -221,23 +221,42 @@ class MFrame(wx.Frame):
         """
         Called to edit a given capture's settings
         """
-        if self.notebook.GetPageCount() == 0:
-            wx.MessageBox('No open captures', 'Error',
-                          wx.OK | wx.ICON_INFORMATION)
-        else:
+        if self.assertOpenCapture():
             self.notebook.getOpenTab().changeSettings()
 
+    def onShowGraph(self, event):
+        if self.assertOpenCapture():
+            if not self.notebook.getOpenTab().session.hasData:
+                wx.MessageBox('No open captures', 'Error',
+                              wx.OK | wx.ICON_INFORMATION)
+                return
+
+            self.notebook.getOpenTab().session.createGraphFromSession()
+
     def onChangeName(self, event):
-        name = self.notebook.getOpenTab().session.getName()
-        dlg = wx.TextEntryDialog(
-            self, 'Enter new name', 'Rename', name)
 
-        if dlg.ShowModal() == wx.ID_OK:
-            name = dlg.GetValue()
-            self.notebook.getOpenTab().session.setName(name)
-            self.notebook.SetPageText(
-                self.notebook.GetSelection(), name )
+        if self.assertOpenCapture():
+            name = self.notebook.getOpenTab().session.getName()
+            dlg = wx.TextEntryDialog(
+                self, 'Enter new name', 'Rename', name)
+
+            if dlg.ShowModal() == wx.ID_OK:
+                name = dlg.GetValue()
+                self.notebook.getOpenTab().session.setName(name)
+                self.notebook.SetPageText(
+                    self.notebook.GetSelection(), name )
 
 
+    def assertOpenCapture(self):
+        """
+        Makes sure there exists a CapturePane
+        to perform action on
+        """
+        if len(self.notebook.getTabList()) == 0:
+            wx.MessageBox('No open captures', 'Error',
+                          wx.OK | wx.ICON_INFORMATION)
+            return False
+
+        return True
 
 

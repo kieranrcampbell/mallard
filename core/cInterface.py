@@ -50,7 +50,7 @@ class cInterface:
         # which voltage position?
         slot = self.count % self.settings.intervalsPerSweep 
 
-        if slot == 0:
+        if slot == (self.settings.intervalsPerSweep - 1):
             # finished one sweep, so send the data back to dataManager
             self.dmcallback_func(self.dataArray)
             self.dataArray = np.zeros( (self.settings.intervalsPerSweep, ) )

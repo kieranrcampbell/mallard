@@ -10,6 +10,7 @@ kieran.renfrew.campbell@cern.ch
 
 import numpy as np
 from SessionSettings import SessionSettings
+from DataManager import DataManager
 
 class FileManager:
     """
@@ -48,16 +49,16 @@ class FileManager:
         data = np.column_stack((volts, counts))
         np.savetxt(self.settings.filename, data, delimiter=",",
                    header = self.constructHeader(),
-                   fmt = "%f %i")
+                   fmt = "%f,%i")
         
-    def loadData(self, fileName):
+    def loadData(self, fileName, dmanager):
         """
         Loads voltages and counts
         from fileName.
         Returns a tuple (voltage, count)
         """
         data = np.loadtxt(fileName, delimiter=",")
-        return (data.T[0], data.T[1])
+        dmanager.setData( (data.T[0], data.T[1]) )
 
     def getSettings(self, fileName):
         """

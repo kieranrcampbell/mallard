@@ -29,6 +29,14 @@ class DataManager:
         """
         self.countArrayList.append(data)
 
+    def setData(self, (volts, count)):
+        """
+        Sets voltage and counts given
+        the voltage and count
+        """
+        self.voltage = volts
+        self.counts = count
+
     def getData(self):
         """
         Returns voltage and counts column_stacked
@@ -40,8 +48,6 @@ class DataManager:
         return self.voltage
 
     def getCounts(self):
-        if not self.countArrayList:
-            return np.zeros( int(self.settings.intervalsPerSweep) )
         return self.counts
 
     def voltArray(self):

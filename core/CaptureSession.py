@@ -16,6 +16,7 @@ from cInterface import cInterface
 from DataManager import DataManager
 from SessionSettings import SessionSettings
 from FileManager import FileManager
+from gui.Graph import Graph
 
 class CaptureSession:
     """
@@ -25,7 +26,7 @@ class CaptureSession:
         self.settings = SessionSettings()
         self.fileManager = FileManager(self.settings)
         self.dmanager = DataManager(self.settings) 
-        
+        self.hasData = False # no data currently loaded
 
     def setName(self, name):
         """
@@ -50,6 +51,9 @@ class CaptureSession:
         Loads a session from a file
         """
         self.loadSettings(path)
+        # load data
+        self.fileManager.loadData(path, self.dmanager)
+        self.hasData = True
 
     def saveSession(self):
         """
@@ -77,3 +81,10 @@ class CaptureSession:
         self.interface.acquire()
         self.dmanager.combineCounts()
         print "Finished capture"
+
+
+        self.hasData = True
+
+    def createGraphFromSession(self):
+        g = Graph(self.dmanager.getData())
+        
