@@ -8,6 +8,18 @@ kieran.renfrew.campbell@cern.ch
 
 
 import wx
+import matplotlib
+import numpy as np
+
+matplotlib.use( 'WXAgg' )
+matplotlib.interactive( True )
+
+from matplotlib.figure import Figure
+from matplotlib.backends.backend_wxagg import \
+    FigureCanvasWxAgg 
+from matplotlib.backends.backend_wxagg import \
+    NavigationToolbar2WxAgg as NavigationToolbar
+
 
 from core import CaptureSession
 from core.SessionSettings import SessionSettings
@@ -74,15 +86,45 @@ class CapturePane(wx.Panel):
 
         self.settingsSizer.AddMany( [ (self.settingsBox, 0, wx.ALIGN_LEFT),
                                       (self.settingsButton, 0, 
-                                       wx.ALIGN_LEFT ) ] )
+                                       wx.ALIGN_LEFT | wx.ALIGN_TOP ) ] )
 
         self.setSettings()
+        self.createGraphBox()
 
         self.upperBox.Add(self.settingsSizer,
                           flag = wx.ALL | wx.ALIGN_TOP | wx.ALIGN_LEFT\
                               | wx.EXPAND,
                           border = 10)
+        self.upperBox.Add(self.graphBoxSizer,
+                          flag = wx.ALL | wx.ALIGN_TOP | wx.ALIGN_LEFT\
+                              | wx.EXPAND,
+                          border = 10)
 
+    def createGraphBox(self):
+        """
+        Creates box to display update graph in
+        """
+        self.graphBox = wx.StaticBox(self, -1, "Graph")
+        self.graphBoxSizer = wx.StaticBoxSizer(self.graphBox, wx.VERTICAL)
+        
+        self.graphPanel = wx.Panel(self, wx.ID_ANY)
+        self.figure = Figure((7,5), None)
+        self.canvas = FigureCanvasWxAgg(self.graphPanel,
+                                        -1, self.figure)
+        self.toolbar = NavigationToolbar(self.canvas)
+
+        gvbox = wx.BoxSizer(wx.VERTICAL)
+        gvbox.Add(self.canvas, flag = wx.ALIGN_TOP)
+        gvbox.Add(self.toolbar, flag = wx.EXPAND)
+        self.graphPanel.SetSizer(gvbox)
+
+        self.graphBoxSizer.Add(self.graphPanel, flag = wx.ALL | \
+                                   wx.ALIGN_TOP | wx.ALIGN_LEFT,
+                               border = 10 )
+        
+
+        self.subplot = self.figure.add_subplot(111)
+        self.subplot.plot(np.arange(10), np.arange(10))
 
 
     def onStartCapture(self, event):
