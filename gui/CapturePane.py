@@ -10,8 +10,8 @@ kieran.renfrew.campbell@cern.ch
 import wx
 import matplotlib
 import numpy as np
+from pylab import *
 
-matplotlib.use( 'WXAgg' )
 matplotlib.interactive( True )
 
 from matplotlib.figure import Figure
@@ -24,7 +24,7 @@ from matplotlib.backends.backend_wxagg import \
 from core import CaptureSession
 from core.SessionSettings import SessionSettings
 from SettingsDialog import SettingsDialog
-
+from GraphManager import GraphManager
 
 class CapturePane(wx.Panel):
     """ 
@@ -36,7 +36,12 @@ class CapturePane(wx.Panel):
 
         # main session that does all analysis
         self.session = CaptureSession()
+        self.subplot = None
+
         self.createPanel()
+
+        self.graphManager = GraphManager(self.subplot, self.canvas)
+        self.session.registerGraphManager(self.graphManager)
 
     def createPanel(self):
         """
@@ -124,7 +129,7 @@ class CapturePane(wx.Panel):
         
 
         self.subplot = self.figure.add_subplot(111)
-        self.subplot.plot(np.arange(10), np.arange(10))
+        print "subplot type: " + str(self.subplot)
 
 
     def onStartCapture(self, event):
@@ -132,7 +137,7 @@ class CapturePane(wx.Panel):
         Begin data capture
         """
         self.session.startCapture()
-        self.session.createGraphFromSession()
+#        self.session.createGraphFromSession()
 
 
     def changeSettings(self):

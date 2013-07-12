@@ -16,7 +16,7 @@ from cInterface import cInterface
 from DataManager import DataManager
 from SessionSettings import SessionSettings
 from FileManager import FileManager
-from gui.Graph import Graph
+
 
 class CaptureSession:
     """
@@ -71,7 +71,13 @@ class CaptureSession:
 
     def startCapture(self):
         self.settings.sanitise()
-        self.dmanager = DataManager(self.settings) 
+
+        """
+        Need to reinitialise dmanager. Can't rely on
+        the fact that self.settings is a pointer as
+        need to recalculate stuff like voltage intervals 
+        """
+        self.dmanager.initialise(self.settings) 
 
         # set up c interface and provide callback function
         # in data manager
@@ -79,12 +85,9 @@ class CaptureSession:
                                     self.settings)
 
         self.interface.acquire()
-        self.dmanager.combineCounts()
+
         print "Finished capture"
-
-
         self.hasData = True
 
-    def createGraphFromSession(self):
-        g = Graph(self.dmanager.getData())
-        
+    def registerGraphManager(self, graphManager):
+        self.dmanager.registerGraphManager(graphManager)

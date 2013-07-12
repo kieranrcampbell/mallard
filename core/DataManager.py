@@ -10,9 +10,19 @@ passed data from the card to store & save
 
 import numpy as np
 
+from gui.GraphManager import GraphManager
+
 class DataManager:
     
     def __init__(self, settings):
+        self.initialise(settings)
+
+    def initialise(self, settings):
+        """
+        Need to restart the datamanager, but can't
+        create a new object due to memory position
+        for callbacks
+        """
         self.settings = settings
         self.countArrayList = [] # list of arrays of each count
 
@@ -23,11 +33,15 @@ class DataManager:
         self.voltage = self.voltArray()
         self.counts = None
 
+
     def dataCallback(self, data):
         """
         Call back after counts
         """
+        print "locd: " + str(self)
         self.countArrayList.append(data)
+        self.combineCounts()
+        self.graphManager.plot(self.voltage, self.counts)
 
     def setData(self, (volts, count)):
         """
@@ -66,3 +80,12 @@ class DataManager:
         self.counts = np.zeros(self.settings.intervalsPerSweep)
         for c in self.countArrayList:
             self.counts = np.add(c, self.counts)
+
+
+    def registerGraphManager(self, graphManager):
+        """
+        Registers a GraphManager for continual
+        updating of the graphs
+        """
+        self.graphManager = graphManager
+        print "loc: " + str(self)
