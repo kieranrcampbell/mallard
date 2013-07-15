@@ -82,6 +82,7 @@ class CaptureSession:
         # set up c interface and provide callback function
         # in data manager
         self.interface = cInterface(self.dmanager.dataCallback,
+                                    self.dmanager.countCallback,
                                     self.settings)
 
         self.interface.acquire()
@@ -91,3 +92,13 @@ class CaptureSession:
 
     def registerGraphManager(self, graphManager):
         self.dmanager.registerGraphManager(graphManager)
+
+
+    def getRange(self):
+        """
+        Returns the range required for gauge
+        """
+        self.settings.sanitise()
+        return self.settings.sweeps
+
+        

@@ -42,6 +42,14 @@ class DataManager:
         self.countArrayList.append(data)
         self.combineCounts()
         self.graphManager.plot(self.voltage, self.counts)
+        self.countCallbackFunc(len(self.countArrayList))
+
+    def countCallback(self, cnt):
+        """
+        Calledback every clock cycle to update any
+        progress on the gui
+        """
+        self.countCallbackFunc(cnt)
 
     def setData(self, (volts, count)):
         """
@@ -89,3 +97,14 @@ class DataManager:
         """
         self.graphManager = graphManager
         print "loc: " + str(self)
+
+
+    def setCountCallbackFunc(self, func):
+        """
+        sets a callback function to call
+        for the count to be reported
+        """
+        self.countCallbackFunc = func
+
+
+

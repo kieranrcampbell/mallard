@@ -42,6 +42,8 @@ class CapturePane(wx.Panel):
 
         self.graphManager = GraphManager(self.subplot, self.canvas)
         self.session.registerGraphManager(self.graphManager)
+        self.session.dmanager.setCountCallbackFunc(self.setGauge)
+
 
     def createPanel(self):
         """
@@ -60,6 +62,14 @@ class CapturePane(wx.Panel):
         self.startButton = wx.Button(self, label='Start Capture',
                                      size=(120, 30))
         self.startButton.Bind(wx.EVT_BUTTON, self.onStartCapture)
+
+        self.gauge = wx.Gauge(self, range=10, size=(400,25))
+        self.bottomControlBox.Add(self.gauge, 1,
+                                  flag = wx.ALL | wx.ALIGN_LEFT | wx.EXPAND, 
+                                  border = 10) 
+
+                                  
+
         self.bottomControlBox.Add(self.startButton, 1,
                                   flag = wx.ALL | wx.ALIGN_BOTTOM | \
                                       wx.ALIGN_RIGHT, border = 10)
@@ -129,6 +139,8 @@ class CapturePane(wx.Panel):
         
 
         self.subplot = self.figure.add_subplot(111)
+        self.subplot.set_xlabel('Volts (V)')
+        self.subplot.set_ylabel('Count')
         print "subplot type: " + str(self.subplot)
 
 
@@ -136,6 +148,8 @@ class CapturePane(wx.Panel):
         """
         Begin data capture
         """
+        self.setGaugeRange(self.session.getRange())
+        self.graphManager.clearPlot()
         self.session.startCapture()
 #        self.session.createGraphFromSession()
 
@@ -211,4 +225,15 @@ class CapturePane(wx.Panel):
                                      str(self.session.settings.sweeps), 
                                  6)
         
+    def setGaugeRange(self, range):
+        """
+        Sets the range of self.gauge
+        """
+        self.gauge.SetRange(range)
 
+    def setGauge(self, count):
+        """
+        Set the position of the gauge
+        """
+        self.gauge.SetValue(count)
+        self.gauge.Refresh()

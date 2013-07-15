@@ -71,7 +71,19 @@ void acquire(void (*pyCallbackFunc)(uInt32),
   // The loop will quit after 10 seconds
   startTime = time(NULL);
 
+
   printf("Beginning main loop\n");
+  
+  // set initial voltage
+  voltage = pyVoltFunc(0);
+  DAQmxErrChk(DAQmxBaseWriteAnalogF64(writeParams.taskHandle,
+				      writeParams.samplesPerChan,0,
+				      writeParams.gtimeout,
+				      DAQmx_Val_GroupByChannel,
+				      &voltage,
+				      &writeParams.gpointsWritten,
+				      NULL));
+
   while( gRunning && !isFinished(0) ) {
 
     // measure counts every time

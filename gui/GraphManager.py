@@ -29,6 +29,11 @@ class GraphManager:
 
     def plot(self, x, y):
  
-        self.subplot.clear()
-        self.subplot.plot(x, y)
+        self.clearPlot()
+        self.subplot.set_xlabel("Volts (V)")
+        self.subplot.set_ylabel("Count")
+        self.subplot.plot(x, y, 'bo')
         self.canvas.draw()
+        
+    def clearPlot(self):
+        self.subplot.clear()

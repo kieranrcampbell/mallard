@@ -13,7 +13,7 @@ import ctypes
 import ctypes.util
 import numpy as np
 import os, sys
-
+from threading import Thread
 
 
 from ctypes import *
@@ -24,11 +24,13 @@ from FileManager import FileManager
 from SessionSettings import SessionSettings
 
 
-class cInterface:
-    def __init__(self, callback_func, settings):
+class cInterface(Thread):
+    def __init__(self, callback_func, cnt_callback, settings):
+        Thread.__init__(self)
 
         self.settings = settings
         self.dmcallback_func = callback_func
+        self.countCallbackFunction = cnt_callback
 
         self.count = 0
         self.voltsPerInterval = \
@@ -47,23 +49,28 @@ class cInterface:
         Only called back every self.settings.clockCyclesPerVoltage steps
         (ie after measuring at a given voltage)
         """
+#        self.countCallbackFunction(self.count)
+
         # which voltage position?
         slot = self.count % self.settings.intervalsPerSweep 
+
+        self.dataArray[slot] = data # add count to correct voltage slot
+
 
         if slot == (self.settings.intervalsPerSweep - 1):
             # finished one sweep, so send the data back to dataManager
             self.dmcallback_func(self.dataArray)
             self.dataArray = np.zeros( (self.settings.intervalsPerSweep, ) )
 
-        self.dataArray[slot] = data # add count to correct voltage slot
-        
-        # could probably be done in more elegant way
+
+        # set at end for card to update voltage for next run
         self.currentVoltage = self.voltsPerInterval * \
               (slot + 1)    
 
         self.count += 1
 
-        if self.count == (self.settings.intervalsPerSweep * self.settings.sweeps):
+        if self.count == (self.settings.intervalsPerSweep * \
+                              self.settings.sweeps):
             # we're done measuring
             self.finished = True
 
@@ -80,6 +87,9 @@ class cInterface:
 
 
     def acquire(self):
+        self.start()
+
+    def run(self):
 
         
         print 'Importing libraries...'
@@ -122,12 +132,11 @@ class cInterface:
     
         CB_FINISHED_TYPE = CFUNCTYPE(c_bool, c_uint)
         is_done_func = CB_FINISHED_TYPE(self.isFinished)
-        print "Done"
 
         # acquire data
         print "Calling acquire..."
         daqtriggerbase.acquire(cb_func, rv_func, is_done_func)
-        print "Done"
+
         # print self.count
 
 
