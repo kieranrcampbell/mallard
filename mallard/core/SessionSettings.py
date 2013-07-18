@@ -32,6 +32,8 @@ class SessionSettings:
         
         self.outputChannel = "/Dev1/ao0"
 
+        self.clockChannel = "/Dev1/PFI1"
+
         self.name = "new_capture" # name of session
 
         self.filename = "" # file name
@@ -50,3 +52,4 @@ class SessionSettings:
         self.outputChannel = str(self.outputChannel)
         self.name = str(self.name)
         self.filename = str(self.filename)
+        self.clockChannel = str(self.clockChannel)
