@@ -1,4 +1,6 @@
 ### Test directory
 
-All the bits of code that went into development.
+All the bits of code that went into development, that may
+prove useful one day.
+
 

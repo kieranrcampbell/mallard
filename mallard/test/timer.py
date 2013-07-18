@@ -1,5 +1,11 @@
 #!/usr/bin/python
 
+"""
+Demonstrates voltage stepping with
+event counting.
+"""
+
+
 from PyDAQmx import *
 from PyDAQmx.DAQmxConstants import *
 from PyDAQmx.DAQmxFunctions import *
