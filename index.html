@@ -32,15 +32,27 @@
     <div id="main_content_wrap" class="outer">
       <section id="main_content" class="inner">
         <h3>
-<a name="mallard-for-cris-at-isolde" class="anchor" href="#mallard-for-cris-at-isolde"><span class="octicon octicon-link"></span></a>Mallard for CRIS at <a href="http://isolde.web.cern.ch/">ISOLDE</a>.</h3>
+<a name="mallard-for-cris-at-isolde" class="anchor" href="#mallard-for-cris-at-isolde"><span class="octicon octicon-link"></span></a>Mallard for CRIS at <a href="http://isolde.web.cern.ch/">ISOLDE</a>
+</h3>
 
 <p>Mallard is data acquisition software for the Collinear Resonant Ionization Spectroscopy experiment at CERN.</p>
 
 <h3>
 <a name="installation" class="anchor" href="#installation"><span class="octicon octicon-link"></span></a>Installation</h3>
 
+<p>Mallard is written in python and so requires a python distribution such as <a href="https://store.continuum.io/">Anaconda</a>.</p>
+
 <h4>
 <a name="dependences" class="anchor" href="#dependences"><span class="octicon octicon-link"></span></a>Dependences</h4>
+
+<p>Mallard has the following dependencies:</p>
+
+<ul>
+<li><a href="http://www.wxpython.org/">wxPython</a></li>
+<li>
+<a href="http://www.scipy.org/">SciPy</a> (on windows we use <a href="https://store.continuum.io/">Anaconda</a> )</li>
+<li><a href="http://pythonhosted.org/PyDAQmx/">PyDAQmx</a></li>
+</ul><p>Mallard also uses <a href="http://www.ni.com/dataacquisition/nidaqmx.htm">NI-DAQmx</a> from National Instruments to interface the <strong>USB-6211</strong> card.</p>
 
 <h4>
 <a name="setup" class="anchor" href="#setup"><span class="octicon octicon-link"></span></a>Setup</h4>
@@ -51,10 +63,21 @@
 <h3>
 <a name="development" class="anchor" href="#development"><span class="octicon octicon-link"></span></a>Development</h3>
 
-<h3>
-<a name="authors-and-contributors" class="anchor" href="#authors-and-contributors"><span class="octicon octicon-link"></span></a>Authors and Contributors</h3>
+<p>The mallard package uses several sub-packages:</p>
 
-<p>You can <a href="https://github.com/blog/821" class="user-mention">@mention</a> a GitHub username to generate a link to their profile. The resulting <code>&lt;a&gt;</code> element will link to the contributor's GitHub Profile. For example: In 2007, Chris Wanstrath (<a href="https://github.com/defunkt" class="user-mention">@defunkt</a>), PJ Hyett (<a href="https://github.com/pjhyett" class="user-mention">@pjhyett</a>), and Tom Preston-Werner (<a href="https://github.com/mojombo" class="user-mention">@mojombo</a>) founded GitHub.</p>
+<ul>
+<li>
+<code>mallard.core</code> - base functionality for the package including data and file handling, as well as managing a general capture session including settings</li>
+<li>
+<code>mallard.daq</code> - interfaces to the USB-6211 card. If the card needs changed in future then only this module needs rewritten</li>
+<li>
+<code>mallard.gui</code> - provides the user interface using wxPython</li>
+<li>
+<code>mallard.test</code> - all the small scripts created along the way, in case they come in handy at a later point</li>
+</ul><h3>
+<a name="authors" class="anchor" href="#authors"><span class="octicon octicon-link"></span></a>Authors</h3>
+
+<p>Originally written by Kieran Campbell (<a href="https://github.com/kieranrcampbell" class="user-mention">@kieranrcampbell</a>) as part of the CERN summer student program.</p>
       </section>
     </div>
 
