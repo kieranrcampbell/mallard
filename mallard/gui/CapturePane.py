@@ -21,10 +21,10 @@ from matplotlib.backends.backend_wxagg import \
     NavigationToolbar2WxAgg as NavigationToolbar
 
 
-from core import CaptureSession
-from core.SessionSettings import SessionSettings
-from SettingsDialog import SettingsDialog
-from GraphManager import GraphManager
+import CaptureSession
+import SessionSettings
+import SettingsDialog
+import GraphManager
 
 class CapturePane(wx.Panel):
     """ 

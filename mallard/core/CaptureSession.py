@@ -11,11 +11,10 @@ kieran.renfrew.campbell@cern.ch
 
 """
 
-
-from cInterface import cInterface
-from DataManager import DataManager
-from SessionSettings import SessionSettings
-from FileManager import FileManager
+from daq import Interface
+import DataManager
+import SessionSettings
+import FileManager
 
 
 class CaptureSession:
@@ -27,6 +26,7 @@ class CaptureSession:
         self.fileManager = FileManager(self.settings)
         self.dmanager = DataManager(self.settings) 
         self.hasData = False # no data currently loaded
+        self.interface = Interface(self.dmanager.dataCallback)
 
     def setName(self, name):
         """
@@ -70,22 +70,18 @@ class CaptureSession:
         self.saveSession()
 
     def startCapture(self):
-        self.settings.sanitise()
-
         """
         Need to reinitialise dmanager. Can't rely on
         the fact that self.settings is a pointer as
         need to recalculate stuff like voltage intervals 
         """
+        self.settings.sanitise()
+        
         self.dmanager.initialise(self.settings) 
-
-        # set up c interface and provide callback function
-        # in data manager
-        self.interface = cInterface(self.dmanager.dataCallback,
-                                    self.dmanager.countCallback,
-                                    self.settings)
-
+                
+        self.interface.createTask(self.settings)
         self.interface.acquire()
+        self.interface.stopTasks()
 
         print "Finished capture"
         self.hasData = True
