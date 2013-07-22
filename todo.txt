@@ -1,0 +1,5 @@
+
+- Integrate analog input from timer into Interface
+- Change settings and re-word so analog input output + counter is clearer
+- Add extra channels to GUI
+

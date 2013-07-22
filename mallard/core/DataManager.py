@@ -10,7 +10,7 @@ passed data from the card to store & save
 
 import numpy as np
 
-from gui.GraphManager import GraphManager
+from mallard.gui.GraphManager import GraphManager
 
 class DataManager:
     

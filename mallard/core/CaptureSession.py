@@ -11,10 +11,10 @@ kieran.renfrew.campbell@cern.ch
 
 """
 
-from daq import Interface
-import DataManager
-import SessionSettings
-import FileManager
+from mallard.daq.Interface import Interface
+from DataManager import DataManager
+from SessionSettings import SessionSettings
+from FileManager import FileManager
 
 
 class CaptureSession:

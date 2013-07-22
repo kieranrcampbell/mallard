@@ -1,7 +1,12 @@
 #!/usr/bin/python
 
 """
-wxFrame test 
+
+Main frame of Mallard application.
+
+kieran.renfrew.campbell@cern.ch
+
+
 """
 
 import wx
@@ -10,14 +15,6 @@ import pylab
 
 from CapturePane import CapturePane
 from CaptureNotebook import CaptureNotebook
-
-
-#matplotlib.use('WXAgg')
-
-# from matplotlib.figure import Figure
-# from matplotlib.backends.backend_wxagg import \
-#     FigureCanvasWxAgg as FigCanvas, \
-#     NavigationToolbar2WxAgg as NavigationToolbar
 
 
 

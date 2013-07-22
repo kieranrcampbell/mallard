@@ -21,10 +21,9 @@ from matplotlib.backends.backend_wxagg import \
     NavigationToolbar2WxAgg as NavigationToolbar
 
 
-import CaptureSession
-import SessionSettings
-import SettingsDialog
-import GraphManager
+from mallard.core.SessionSettings import SessionSettings
+from mallard.core.CaptureSession import CaptureSession 
+from GraphManager import GraphManager
 
 class CapturePane(wx.Panel):
     """ 
@@ -42,7 +41,6 @@ class CapturePane(wx.Panel):
 
         self.graphManager = GraphManager(self.subplot, self.canvas)
         self.session.registerGraphManager(self.graphManager)
-        self.session.dmanager.setCountCallbackFunc(self.setGauge)
 
 
     def createPanel(self):
@@ -63,12 +61,6 @@ class CapturePane(wx.Panel):
                                      size=(120, 30))
         self.startButton.Bind(wx.EVT_BUTTON, self.onStartCapture)
 
-        self.gauge = wx.Gauge(self, range=10, size=(400,25))
-        self.bottomControlBox.Add(self.gauge, 1,
-                                  flag = wx.ALL | wx.ALIGN_LEFT | wx.EXPAND, 
-                                  border = 10) 
-
-                                  
 
         self.bottomControlBox.Add(self.startButton, 1,
                                   flag = wx.ALL | wx.ALIGN_BOTTOM | \
@@ -148,7 +140,6 @@ class CapturePane(wx.Panel):
         """
         Begin data capture
         """
-        self.setGaugeRange(self.session.getRange())
         self.graphManager.clearPlot()
         self.session.startCapture()
 #        self.session.createGraphFromSession()
@@ -198,42 +189,37 @@ class CapturePane(wx.Panel):
         """
         self.settingsBox.Clear()
         
-        self.settingsBox.Insert("Input channel: " + \
-                                    str(self.session.settings.inputChannel),
+        self.settingsBox.Insert("Counter channel: " + \
+                                str(self.session.settings.counterChannel),
                                 0)
 
-        self.settingsBox.Insert("Output channel: " + \
-                                    str(self.session.settings.outputChannel),  1)
+        self.settingsBox.Insert("AO channel: " + \
+                                str(self.session.settings.aoChannel),  1)
+
+        self.settingsBox.Insert("AI channel: " + \
+                                str(self.session.settings.aiChannel), 2)
+        
+        self.settingsBox.Insert("Clock channel: " + \
+                                str(self.session.settings.clockChannel), 2)
+
 
         self.settingsBox.Insert("Cycles per volt: " + \
-                                    str(self.session.settings.clockCyclesPerVoltage), 
+                                str(self.session.settings.clockCyclesPerVoltage), 
                                 2)
         
         self.settingsBox.Insert( "Voltage min: " + \
-                                     str(self.session.settings.voltageMin),
+                                 str(self.session.settings.voltageMin),
                                  3)
 
         self.settingsBox.Insert( "Voltage max: " + \
-                                     str(self.session.settings.voltageMax),
+                                 str(self.session.settings.voltageMax),
                                  4)
 
         self.settingsBox.Insert( "Intervals per sweep: " + \
-                                     str(self.session.settings.intervalsPerSweep), 
+                                 str(self.session.settings.intervalsPerSweep), 
                                  5)
 
         self.settingsBox.Insert( "Sweeps: " + \
-                                     str(self.session.settings.sweeps), 
+                                 str(self.session.settings.sweeps), 
                                  6)
         
-    def setGaugeRange(self, range):
-        """
-        Sets the range of self.gauge
-        """
-        self.gauge.SetRange(range)
-
-    def setGauge(self, count):
-        """
-        Set the position of the gauge
-        """
-        self.gauge.SetValue(count)
-        self.gauge.Refresh()

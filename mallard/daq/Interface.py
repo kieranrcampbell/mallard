@@ -50,14 +50,14 @@ class Interface:
 
         # configure channels
         DAQmxCreateCICountEdgesChan(self.countTaskHandle, 
-                                    self.settings.inputChannel, "",
+                                    self.settings.counterChannel, "",
                                     DAQmx_Val_Rising, 0, DAQmx_Val_CountUp)
         DAQmxCfgSampClkTiming(self.countTaskHandle, self.settings.clockChannel,
                               self.maxRate, DAQmx_Val_Rising, 
                               DAQmx_Val_ContSamps, 1)
 
         DAQmxCreateAOVoltageChan(self.writeTaskHandle, 
-                                 self.settings.outputChannel
+                                 self.settings.aoChannel,
                                  "", self.settings.voltageMin,
                                  self.settings.voltageMax,
                                  DAQmx_Val_Volts, None)

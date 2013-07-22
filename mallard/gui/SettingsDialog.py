@@ -9,7 +9,7 @@ For changing settings
 """
 
 import wx
-from core.SessionSettings import SessionSettings
+from mallard.core import *
 
 class SettingsDialog(wx.Dialog):
 
@@ -27,9 +27,15 @@ class SettingsDialog(wx.Dialog):
 
 
         # texts
-        label6 = wx.StaticText(self, label="Input channel",
+        label6 = wx.StaticText(self, label="Counter channel",
                                style = wx.ALIGN_LEFT | wx.ALL)
-        label7 = wx.StaticText(self, label="Output channel",
+        label7 = wx.StaticText(self, label="AO channel",
+                               style = wx.ALIGN_LEFT | wx.ALL)
+
+        label8 = wx.StaticText(self, label="AI channel",
+                               style = wx.ALIGN_LEFT | wx.ALL)
+
+        label9 = wx.StaticText(self, label="Clock channel",
                                style = wx.ALIGN_LEFT | wx.ALL)
 
         label1 = wx.StaticText(self, label="Clock cycles per voltage: ",
@@ -46,6 +52,8 @@ class SettingsDialog(wx.Dialog):
         # text boxes
         self.txt6 = wx.TextCtrl(self, size=(100,30), id=-1)
         self.txt7 = wx.TextCtrl(self, size=(100,30), id=-1)
+        self.txt8 = wx.TextCtrl(self, size=(100,30), id=-1)
+        self.txt9 = wx.TextCtrl(self, size=(100,30), id=-1)
         self.txt1 = wx.TextCtrl(self, size=(50, 30), id=-1)
         self.txt2 = wx.TextCtrl(self, size=(50, 30), id=-1)
         self.txt3 = wx.TextCtrl(self, size=(50, 30), id=-1)
@@ -63,6 +71,10 @@ class SettingsDialog(wx.Dialog):
                       (self.txt6, 0, wx.ALIGN_RIGHT),
                       (label7, 0, wx.ALIGN_LEFT),
                       (self.txt7, 0, wx.ALIGN_RIGHT),
+                      (label8, 0, wx.ALIGN_LEFT),
+                      (self.txt8, 0, wx.ALIGN_RIGHT),
+                      (label9, 0, wx.ALIGN_LEFT),
+                      (self.txt9, 0, wx.ALIGN_RIGHT),
                       (label1, 0, wx.ALIGN_LEFT),
                       (self.txt1, 0, wx.ALIGN_RIGHT),
                       (label2, 0, wx.ALIGN_LEFT),
@@ -86,8 +98,10 @@ class SettingsDialog(wx.Dialog):
 
     def setTextFields(self, settings):
         self.settings = settings
-        self.txt6.SetValue(str(self.settings.inputChannel))
-        self.txt7.SetValue(str(self.settings.outputChannel))
+        self.txt6.SetValue(str(self.settings.counterChannel))
+        self.txt7.SetValue(str(self.settings.aoChannel))
+        self.txt8.SetValue(str(self.settings.aiChannel))
+        self.txt9.SetValue(str(self.settings.clockChannel))
         self.txt1.SetValue(str(self.settings.clockCyclesPerVoltage))
         self.txt2.SetValue(str(self.settings.voltageMin))
         self.txt3.SetValue(str(self.settings.voltageMax))
@@ -97,8 +111,10 @@ class SettingsDialog(wx.Dialog):
 
     def onOk(self, event):
         # do self settings here
-        self.settings.inputChannel = self.txt6.GetValue()
-        self.settings.outputChannel = self.txt7.GetValue()
+        self.settings.counterChannel = self.txt6.GetValue()
+        self.settings.aoChannel = self.txt7.GetValue()
+        self.settings.aiChannel = self.txt8.GetValue()
+        self.settings.counterChannel = self.txt9.GetValue()
         self.settings.clockCyclesPerVoltage = self.txt1.GetValue()
         self.settings.voltageMin = self.txt2.GetValue()
         self.settings.voltageMax = self.txt3.GetValue()

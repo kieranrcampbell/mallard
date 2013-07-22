@@ -28,9 +28,11 @@ class SessionSettings:
 
         self.sweeps = 1
         
-        self.inputChannel = "/Dev1/ctr1" # corresponds to PFI3
+        self.counterChannel = "/Dev1/ctr1" # corresponds to PFI3
         
-        self.outputChannel = "/Dev1/ao0"
+        self.aoChannel = "/Dev1/ao0"
+
+        self.aiChannel = "/Dev1/ai2"
 
         self.clockChannel = "/Dev1/PFI1"
 
@@ -48,8 +50,8 @@ class SessionSettings:
         self.voltageMax = int(self.voltageMax)
         self.intervalsPerSweep = int(self.intervalsPerSweep)
         self.sweeps = int(self.sweeps)
-        self.inputChannel = str(self.inputChannel)
-        self.outputChannel = str(self.outputChannel)
+        self.counterChannel = str(self.counterChannel)
+        self.aoChannel = str(self.aoChannel)
         self.name = str(self.name)
         self.filename = str(self.filename)
         self.clockChannel = str(self.clockChannel)

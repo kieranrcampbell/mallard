@@ -111,8 +111,8 @@ class cInterface(Thread):
         daqtriggerbase.acquire.restype = None
 
         # set up user settings
-        readChannel = self.settings.inputChannel#virtual self.counter channel
-        writeChannel = self.settings.outputChannel
+        readChannel = self.settings.counterChannel#virtual self.counter channel
+        writeChannel = self.settings.aoChannel
         report_every = c_int(self.settings.clockCyclesPerVoltage)
     
         # set parameters

@@ -29,7 +29,7 @@ class CaptureNotebook(wx.Notebook):
         Callback to add a new tab
         """
         tab = CapturePane(self)
-        tab.SetBackgroundColour("Gray")
+#        tab.SetBackgroundColour("Gray")
         self.AddPage(tab, title)
         self.SetSelection(self.GetPageCount() - 1)
 
