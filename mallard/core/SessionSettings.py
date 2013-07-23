@@ -42,8 +42,9 @@ class SessionSettings:
 
     def sanitise(self):
         """ 
-        makes sure the ints are ints and
-        the strings are strings
+        Makes sure the ints are ints and
+        the strings are strings, as reading from
+        file normally makes everything a string
         """
         self.clockCyclesPerVoltage = int(self.clockCyclesPerVoltage)
         self.voltageMin = int(self.voltageMin)

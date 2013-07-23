@@ -44,11 +44,13 @@ class Interface(Thread):
 
         # create task handles
         self.countTaskHandle = TaskHandle(0)
-        self.writeTaskHandle = TaskHandle(0)
+        self.aoTaskHandle = TaskHandle(0)
+        self.aiTaskHandle = TaskHandle(0)
 
         # create tasks
         DAQmxCreateTask("", byref(self.countTaskHandle))
-        DAQmxCreateTask("", byref(self.writeTaskHandle))
+        DAQmxCreateTask("", byref(self.aoTaskHandle))
+        DAQmxCreateTask("", byref(self.aiTaskHandle))
 
         # configure channels
         DAQmxCreateCICountEdgesChan(self.countTaskHandle, 
@@ -59,15 +61,21 @@ class Interface(Thread):
                               self.maxRate, DAQmx_Val_Rising, 
                               DAQmx_Val_ContSamps, 1)
 
-        DAQmxCreateAOVoltageChan(self.writeTaskHandle, 
+        DAQmxCreateAOVoltageChan(self.aoTaskHandle, 
                                  self.settings.aoChannel,
                                  "", self.settings.voltageMin,
                                  self.settings.voltageMax,
                                  DAQmx_Val_Volts, None)
 
+        DAQmxCreateAIVoltageChan(self.aiTaskHandle,
+                                 self.settings.aiChannel, "",
+                                 DAQmx_Val_RSE, -10.0, 10.0,
+                                 DAQmx_Val_Volts, None)
+
         # start tasks
         DAQmxStartTask(self.countTaskHandle)
-        DAQmxStartTask(self.writeTaskHandle)
+        DAQmxStartTask(self.aoTaskHandle)
+        DAQmxStartTask(self.aiTaskHandle)
 
     def acquire(self):
         """
@@ -81,31 +89,35 @@ class Interface(Thread):
         """
         Main acquire loop
         """
-        data = uInt32(0) # the counter
+        countData = uInt32(0) # the counter
+        aiData = float64(0)
         
         # set initial voltage
-        voltage = self.settings.voltageMin
+        aoVoltage = self.settings.voltageMin
 
         voltsPerInterval = (self.settings.voltageMax - \
                             self.settings.voltageMin) \
                            / float(self.settings.intervalsPerScan)
 
 
-        DAQmxWriteAnalogScalarF64(self.writeTaskHandle, True, 
+        DAQmxWriteAnalogScalarF64(self.aoTaskHandle, True, 
                                   self.timeout,
-                                  voltage, None)
+                                  aoVoltage, None)
 
         # begin acquisition loop
         for i in range(self.settings.scans):
             for j in range(self.settings.intervalsPerScan):
                 DAQmxReadCounterScalarU32(self.countTaskHandle, 
                                           self.timeout,
-                                          byref(data), None)
-                self.callbackFunc(voltage, data)
-                voltage = j * voltsPerInterval
-                DAQmxWriteAnalogScalarF64(self.writeTaskHandle, 
+                                          byref(countData), None)
+                DAQmxReadAnalogScalarF64(aiTaskHandle, timout, 
+                                         byref(aiData), None)
+
+                self.callbackFunc(i, j, countData, aoVoltage)
+                aoVoltage = j * voltsPerInterval
+                DAQmxWriteAnalogScalarF64(self.aoTaskHandle, 
                                           True, self.timeout,
-                                          voltage, None)
+                                          aoVoltage, None)
 
 
     def stopTasks(self):
@@ -113,7 +125,7 @@ class Interface(Thread):
         Halts current tasks
         """
         DAQmxStopTask(self.countTaskHandle)
-        DAQmxStopTask(self.writeTaskHandle)
+        DAQmxStopTask(self.aoTaskHandle)
     
 
 
