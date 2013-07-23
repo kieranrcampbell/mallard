@@ -20,12 +20,15 @@ from PyDAQmx import *
 from PyDAQmx.DAQmxConstants import *
 from PyDAQmx.DAQmxFunctions import *
 
+from threading import Thread
 
-class Interface:
+class Interface(Thread):
     """
     Provides physical interface & callback using PyDAQmx
     """
     def __init__(self, callbackFunc):
+        Thread.__init__(self)
+
         self.settings = None
 
         self.callbackFunc = callbackFunc # to report data to
@@ -36,8 +39,7 @@ class Interface:
         self.settings.sanitise() # don't want things to go wrong here
 
         # constants
-        self.timeout = 100.0
-        
+        self.timeout = 100.0 # arbitrary - change in future
         self.maxRate = 1000.0
 
         # create task handles
@@ -52,7 +54,8 @@ class Interface:
         DAQmxCreateCICountEdgesChan(self.countTaskHandle, 
                                     self.settings.counterChannel, "",
                                     DAQmx_Val_Rising, 0, DAQmx_Val_CountUp)
-        DAQmxCfgSampClkTiming(self.countTaskHandle, self.settings.clockChannel,
+        DAQmxCfgSampClkTiming(self.countTaskHandle, 
+                              self.settings.clockChannel,
                               self.maxRate, DAQmx_Val_Rising, 
                               DAQmx_Val_ContSamps, 1)
 
@@ -66,21 +69,35 @@ class Interface:
         DAQmxStartTask(self.countTaskHandle)
         DAQmxStartTask(self.writeTaskHandle)
 
-
     def acquire(self):
+        """
+        Due to the threaded nature, starting the thread
+        via acquire() (bit legacy, also nice) will then
+        call run()
+        """
+        self.start()
+
+    def run(self):
         """
         Main acquire loop
         """
         data = uInt32(0) # the counter
         
         # set initial voltage
-        voltage = vMin
-        DAQmxWriteAnalogScalarF64(self.writeTaskHandle, True, self.timeout,
+        voltage = self.settings.voltageMin
+
+        voltsPerInterval = (self.settings.voltageMax - \
+                            self.settings.voltageMin) \
+                           / float(self.settings.intervalsPerScan)
+
+
+        DAQmxWriteAnalogScalarF64(self.writeTaskHandle, True, 
+                                  self.timeout,
                                   voltage, None)
 
         # begin acquisition loop
-        for i in range(scans):
-            for j in range(intervalsPerScan):
+        for i in range(self.settings.scans):
+            for j in range(self.settings.intervalsPerScan):
                 DAQmxReadCounterScalarU32(self.countTaskHandle, 
                                           self.timeout,
                                           byref(data), None)

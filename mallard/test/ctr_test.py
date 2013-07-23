@@ -33,18 +33,18 @@ class ctr_test:
         self.settings.clockCyclesPerVoltage = 100
         self.settings.voltageMin = 0
         self.settings.voltageMax = 4
-        self.settings.intervalsPerSweep = 50
-        self.settings.sweeps = 2
+        self.settings.intervalsPerScan = 50
+        self.settings.scans = 2
         self.settings.name = 'mycapture'
 
         self.voltsPerInterval = (self.settings.voltageMax - self.settings.voltageMin) \
-            / float(self.settings.intervalsPerSweep)
+            / float(self.settings.intervalsPerScan)
 
         print "Volts per interval: " + str(self.voltsPerInterval)
 
-        self.dataArray = np.zeros( (self.settings.intervalsPerSweep, ) )
+        self.dataArray = np.zeros( (self.settings.intervalsPerScan, ) )
         self.currentVoltage = self.settings.voltageMin
-        self.currentSweep = 0
+        self.currentScan = 0
 
         self.finished = False # tell C we're finished
 
@@ -53,7 +53,7 @@ class ctr_test:
         """
         Only called back every self.settings.clockCyclesPerVoltage steps
         """
-        slot = self.count % self.settings.intervalsPerSweep # which voltage position?
+        slot = self.count % self.settings.intervalsPerScan # which voltage position?
         self.dataArray[slot] += data # add count to correct voltage slot
         
         # could probably be done in more elegant way
@@ -62,7 +62,7 @@ class ctr_test:
 
         self.count += 1
 
-        if self.count == (self.settings.intervalsPerSweep * self.settings.sweeps):
+        if self.count == (self.settings.intervalsPerScan * self.settings.scans):
             # we're done measuring
             self.finished = True
 

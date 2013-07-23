@@ -35,11 +35,11 @@ class cInterface(Thread):
         self.count = 0
         self.voltsPerInterval = \
             (self.settings.voltageMax - self.settings.voltageMin) \
-            / float(self.settings.intervalsPerSweep)
+            / float(self.settings.intervalsPerScan)
 
-        self.dataArray = np.zeros( (self.settings.intervalsPerSweep, ) )
+        self.dataArray = np.zeros( (self.settings.intervalsPerScan, ) )
         self.currentVoltage = self.settings.voltageMin
-        self.currentSweep = 0
+        self.currentScan = 0
 
         self.finished = False # tell C we're finished
 
@@ -52,15 +52,15 @@ class cInterface(Thread):
 #        self.countCallbackFunction(self.count)
 
         # which voltage position?
-        slot = self.count % self.settings.intervalsPerSweep 
+        slot = self.count % self.settings.intervalsPerScan 
 
         self.dataArray[slot] = data # add count to correct voltage slot
 
 
-        if slot == (self.settings.intervalsPerSweep - 1):
-            # finished one sweep, so send the data back to dataManager
+        if slot == (self.settings.intervalsPerScan - 1):
+            # finished one scan, so send the data back to dataManager
             self.dmcallback_func(self.dataArray)
-            self.dataArray = np.zeros( (self.settings.intervalsPerSweep, ) )
+            self.dataArray = np.zeros( (self.settings.intervalsPerScan, ) )
 
 
         # set at end for card to update voltage for next run
@@ -69,8 +69,8 @@ class cInterface(Thread):
 
         self.count += 1
 
-        if self.count == (self.settings.intervalsPerSweep * \
-                              self.settings.sweeps):
+        if self.count == (self.settings.intervalsPerScan * \
+                              self.settings.scans):
             # we're done measuring
             self.finished = True
 

@@ -24,6 +24,7 @@ from matplotlib.backends.backend_wxagg import \
 from mallard.core.SessionSettings import SessionSettings
 from mallard.core.CaptureSession import CaptureSession 
 from GraphManager import GraphManager
+from SettingsDialog import SettingsDialog
 
 class CapturePane(wx.Panel):
     """ 
@@ -142,7 +143,7 @@ class CapturePane(wx.Panel):
         """
         self.graphManager.clearPlot()
         self.session.startCapture()
-#        self.session.createGraphFromSession()
+
 
 
     def changeSettings(self):
@@ -200,26 +201,26 @@ class CapturePane(wx.Panel):
                                 str(self.session.settings.aiChannel), 2)
         
         self.settingsBox.Insert("Clock channel: " + \
-                                str(self.session.settings.clockChannel), 2)
+                                str(self.session.settings.clockChannel), 3)
 
 
         self.settingsBox.Insert("Cycles per volt: " + \
                                 str(self.session.settings.clockCyclesPerVoltage), 
-                                2)
+                                4)
         
         self.settingsBox.Insert( "Voltage min: " + \
                                  str(self.session.settings.voltageMin),
-                                 3)
+                                 5)
 
         self.settingsBox.Insert( "Voltage max: " + \
                                  str(self.session.settings.voltageMax),
-                                 4)
-
-        self.settingsBox.Insert( "Intervals per sweep: " + \
-                                 str(self.session.settings.intervalsPerSweep), 
-                                 5)
-
-        self.settingsBox.Insert( "Sweeps: " + \
-                                 str(self.session.settings.sweeps), 
                                  6)
+
+        self.settingsBox.Insert( "Intervals per scan: " + \
+                                 str(self.session.settings.intervalsPerScan), 
+                                 7)
+
+        self.settingsBox.Insert( "Scans: " + \
+                                 str(self.session.settings.scans), 
+                                 8)
         

@@ -95,6 +95,6 @@ class CaptureSession:
         Returns the range required for gauge
         """
         self.settings.sanitise()
-        return self.settings.sweeps
+        return self.settings.scans
 
         

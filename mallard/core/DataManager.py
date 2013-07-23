@@ -28,7 +28,7 @@ class DataManager:
 
         self.voltsPerInterval = \
             (self.settings.voltageMax - self.settings.voltageMin) \
-            / float(self.settings.intervalsPerSweep)
+            / float(self.settings.intervalsPerScan)
 
         self.voltage = self.voltArray()
         self.counts = None
@@ -77,7 +77,7 @@ class DataManager:
         Adds all the counts at a given voltage
         together into self.counts
         """
-        self.counts = np.zeros(self.settings.intervalsPerSweep)
+        self.counts = np.zeros(self.settings.intervalsPerScan)
         for c in self.countArrayList:
             self.counts = np.add(c, self.counts)
 

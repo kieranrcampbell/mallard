@@ -23,10 +23,10 @@ class SessionSettings:
         # maximum voltage
         self.voltageMax = 5
 
-        # number of voltages to record for per sweep
-        self.intervalsPerSweep = 100
+        # number of voltages to record for per scan
+        self.intervalsPerScan = 100
 
-        self.sweeps = 1
+        self.scans = 1
         
         self.counterChannel = "/Dev1/ctr1" # corresponds to PFI3
         
@@ -48,8 +48,8 @@ class SessionSettings:
         self.clockCyclesPerVoltage = int(self.clockCyclesPerVoltage)
         self.voltageMin = int(self.voltageMin)
         self.voltageMax = int(self.voltageMax)
-        self.intervalsPerSweep = int(self.intervalsPerSweep)
-        self.sweeps = int(self.sweeps)
+        self.intervalsPerScan = int(self.intervalsPerScan)
+        self.scans = int(self.scans)
         self.counterChannel = str(self.counterChannel)
         self.aoChannel = str(self.aoChannel)
         self.name = str(self.name)

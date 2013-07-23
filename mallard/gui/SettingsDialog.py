@@ -18,7 +18,7 @@ class SettingsDialog(wx.Dialog):
 
         self.SetTitle("Edit Settings")
         self.InitUI()
-        self.SetSize((300, 350))
+        self.SetSize((300, 420))
 
 
     def InitUI(self):
@@ -44,9 +44,9 @@ class SettingsDialog(wx.Dialog):
                               style = wx.ALIGN_LEFT | wx.ALL)
         label3 = wx.StaticText(self, label="Max voltage: ",
                               style = wx.ALIGN_LEFT | wx.ALL)
-        label4 = wx.StaticText(self, label="Intervals per sweep: ",
+        label4 = wx.StaticText(self, label="Intervals per scan: ",
                               style = wx.ALIGN_LEFT | wx.ALL)
-        label5 = wx.StaticText(self, label="Sweeps: ",
+        label5 = wx.StaticText(self, label="Scans: ",
                               style = wx.ALIGN_LEFT | wx.ALL)
 
         # text boxes
@@ -105,8 +105,8 @@ class SettingsDialog(wx.Dialog):
         self.txt1.SetValue(str(self.settings.clockCyclesPerVoltage))
         self.txt2.SetValue(str(self.settings.voltageMin))
         self.txt3.SetValue(str(self.settings.voltageMax))
-        self.txt4.SetValue(str(self.settings.intervalsPerSweep))
-        self.txt5.SetValue(str(self.settings.sweeps))
+        self.txt4.SetValue(str(self.settings.intervalsPerScan))
+        self.txt5.SetValue(str(self.settings.scans))
 
 
     def onOk(self, event):
@@ -114,12 +114,12 @@ class SettingsDialog(wx.Dialog):
         self.settings.counterChannel = self.txt6.GetValue()
         self.settings.aoChannel = self.txt7.GetValue()
         self.settings.aiChannel = self.txt8.GetValue()
-        self.settings.counterChannel = self.txt9.GetValue()
+        self.settings.clockChannel = self.txt9.GetValue()
         self.settings.clockCyclesPerVoltage = self.txt1.GetValue()
         self.settings.voltageMin = self.txt2.GetValue()
         self.settings.voltageMax = self.txt3.GetValue()
-        self.settings.intervalsPerSweep = self.txt4.GetValue()
-        self.settings.sweeps = self.txt5.GetValue()
+        self.settings.intervalsPerScan = self.txt4.GetValue()
+        self.settings.scans = self.txt5.GetValue()
 
         self.Destroy()
 
