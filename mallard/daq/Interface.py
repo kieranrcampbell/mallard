@@ -125,13 +125,21 @@ class Interface(Thread):
                                           aoVoltage, None)
 
 
+        self.stopTasks()
+        self._Thread__stop()
+
+            
     def stopTasks(self):
         """
         Halts current tasks
         """
         DAQmxStopTask(self.countTaskHandle)
         DAQmxStopTask(self.aoTaskHandle)
-    
+        DAQmxStopTask(self.aiTaskHandle)
+
+        DAQmxClearTask(self.countTaskHandle)
+        DAQmxClearTask(self.aoTaskHandle)
+        DAQmxClearTask(self.aiTaskHandle)
 
 
 

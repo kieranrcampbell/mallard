@@ -26,7 +26,7 @@ class CaptureSession:
         self.fileManager = FileManager(self.settings)
         self.dmanager = DataManager(self.settings) 
         self.hasData = False # no data currently loaded
-        self.interface = Interface(self.dmanager.dataCallback)
+
 
     def setName(self, name):
         """
@@ -87,12 +87,11 @@ class CaptureSession:
         self.settings.sanitise()
         
         self.dmanager.initialise(self.settings) 
-                
-        self.interface.createTask(self.settings)
-        self.interface.acquire()
-        self.interface.stopTasks()
 
-        print "Finished capture"
+        interface = Interface(self.dmanager.dataCallback)    
+        interface.createTask(self.settings)
+        interface.acquire()
+
         self.hasData = True
 
     def registerGraphManager(self, graphManager):

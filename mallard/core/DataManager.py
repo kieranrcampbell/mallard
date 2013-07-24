@@ -61,8 +61,8 @@ class DataManager:
         
         # update graphs on gui
         self.graphManager.plot(self.voltArray, 
-                               self.getCombinedCounts(),
-                               self.getCombinedAI())
+                               self.getCombinedCounts(scan),
+                               self.getCombinedAI(scan))
 
 
 
@@ -73,19 +73,21 @@ class DataManager:
         """
         self.graphManager = graphManager
 
-    def getCombinedCounts(self):
+    def getCombinedCounts(self, meanTo):
         """
         Returns a numpy array of the counts
         averaged over each scan
+        Sometimes we only want to mean the first meanTo columns
+        for displaying on the graph
         """
-        return np.mean(self.rawCountData, axis=0)
+        return np.mean(self.rawCountData[:meanTo], axis=0)
 
-    def getCombinedAI(self):
+    def getCombinedAI(self, meanTo):
         """
         Returns a numpy array of the AI readings
         averaged over each scan
         """
-        return np.mean(self.rawAIData, axis=0)
+        return np.mean(self.rawAIData[:meanTo], axis=0)
 
     def getVoltageArray(self):
         """
@@ -100,8 +102,8 @@ class DataManager:
         stacked together
         """
         return np.column_stack((self.getVoltageArray(),
-                                self.getCombinedCounts(),
-                                self.getCombinedAI()))
+                                self.getCombinedCounts(self.settings.scans),
+                                self.getCombinedAI(self.settings.scans)))
 
     def getRawCountData(self):
         return self.rawCountData

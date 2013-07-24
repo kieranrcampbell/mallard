@@ -39,7 +39,7 @@ class GraphManager:
 
         self.aiSubplot.set_xlabel("Volts (V)")
         self.aiSubplot.set_ylabel("Measured Volts (V)")
-        self.aiSubplot.plot(voltage, ai, 'bo')
+        self.aiSubplot.plot(voltage, ai, 'k')
 
         self.canvas.draw()
 

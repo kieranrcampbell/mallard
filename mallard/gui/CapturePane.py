@@ -120,7 +120,7 @@ class CapturePane(wx.Panel):
         self.graphBoxSizer = wx.StaticBoxSizer(self.graphBox, wx.VERTICAL)
         
         self.graphPanel = wx.Panel(self, wx.ID_ANY)
-        self.figure = Figure((7,5), None)
+        self.figure = Figure((8,6), None)
         self.canvas = FigureCanvasWxAgg(self.graphPanel,
                                         -1, self.figure)
         self.toolbar = NavigationToolbar(self.canvas)

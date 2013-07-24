@@ -13,7 +13,7 @@ import wx
 
 if __name__ == "__main__":
     # application variables
-    size = (900, 700)
+    size = (950, 750)
     title = "Mallard - Data Acquisition for CRIS"
 
 
