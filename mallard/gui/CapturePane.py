@@ -36,11 +36,15 @@ class CapturePane(wx.Panel):
 
         # main session that does all analysis
         self.session = CaptureSession()
-        self.subplot = None
+        self.countSubplot = None
+        self.aiSubplot = None
 
+        # creates self.*Subplot
         self.createPanel()
 
-        self.graphManager = GraphManager(self.subplot, self.canvas)
+        self.graphManager = GraphManager(self.countSubplot, 
+                                         self.aiSubplot,
+                                         self.canvas)
         self.session.registerGraphManager(self.graphManager)
 
 
@@ -131,11 +135,15 @@ class CapturePane(wx.Panel):
                                border = 10 )
         
 
-        self.subplot = self.figure.add_subplot(111)
-        self.subplot.set_xlabel('Volts (V)')
-        self.subplot.set_ylabel('Count')
-        print "subplot type: " + str(self.subplot)
+        # count subplot
+        self.countSubplot = self.figure.add_subplot(211)
+        self.countSubplot.set_xlabel('Volts (V)')
+        self.countSubplot.set_ylabel('Count')
 
+        # ai subplot
+        self.aiSubplot = self.figure.add_subplot(212)
+        self.aiSubplot.set_xlabel('Volts (V)')
+        self.aiSubplot.set_ylabel('Read Volts (V)')
 
     def onStartCapture(self, event):
         """

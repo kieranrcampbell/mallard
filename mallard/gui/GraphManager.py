@@ -19,21 +19,32 @@ class GraphManager:
     TODO: way too much stuff named 'plot' in this
     """
 
-    def __init__(self, subplot, canvas):
+    def __init__(self, countSubplot, aiSubplot, canvas):
         """
         plot should be the subplot
         bound to the canvas
         """
-        self.subplot = subplot
+        self.countSubplot = countSubplot
+        self.aiSubplot = aiSubplot
         self.canvas = canvas
 
-    def plot(self, x, y):
- 
+    def plot(self, voltage, counts, ai ):
+        """
+        Plots counts & ai against voltage
+        """
         self.clearPlot()
-        self.subplot.set_xlabel("Volts (V)")
-        self.subplot.set_ylabel("Count")
-        self.subplot.plot(x, y, 'bo')
+        self.countSubplot.set_xlabel("Volts (V)")
+        self.countSubplot.set_ylabel("Count")
+        self.countSubplot.plot(voltage, counts, 'bo')
+
+        self.aiSubplot.set_xlabel("Volts (V)")
+        self.aiSubplot.set_ylabel("Measured Volts (V)")
+        self.aiSubplot.plot(voltage, ai, 'bo')
+
         self.canvas.draw()
+
+
         
     def clearPlot(self):
-        self.subplot.clear()
+        self.countSubplot.clear()
+        self.aiSubplot.clear()

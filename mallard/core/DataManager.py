@@ -58,7 +58,12 @@ class DataManager:
 
         self.rawCountData[scan][interval] = countData
         self.rawAIData[scan][interval] = aiData
-        self.graphManager.plot(self.voltArray, self.getCombinedCounts())
+        
+        # update graphs on gui
+        self.graphManager.plot(self.voltArray, 
+                               self.getCombinedCounts(),
+                               self.getCombinedAI())
+
 
 
     def registerGraphManager(self, graphManager):
