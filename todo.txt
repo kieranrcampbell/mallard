@@ -1,9 +1,42 @@
+-  todo
+#- done
 
 - Integrate analog input from timer into Interface
 #- Change settings and re-word so analog input output + counter is clearer
 #- Add extra channels to GUI
 #- Thread Interface
-- Modify datamanager to store AI
+#- Modify datamanager to store AI
 - Modify filemanager to store AI
 - Add second graph to plot ai
 - Add kill interface
+
+
+
+File capture:
+Say I have a capture called 'mycapture', then we generate
+3 separate files:
+mycapture.raw.ai.csv
+mycapture.raw.counts.csv
+mycapture.integrated.csv
+
+
+Each file should store a settings header so settings can
+be retrieved at any one time. Opening any of the files,
+the program should "intelligently" look for the others
+and prompt the user if either of the 'raw' ones are missing
+(integrated can always be generated from raw).
+
+Integrated format (but in csv, with header):
+
+Volts	   Count	AI Volt
+0	   3		2.5
+0.1	   1		3.1
+...	   ...		...
+
+Raw format (again csv, with header):
+
+A scan * intervalsPerScan dimension array
+where position [i][j] corresponds to the
+counts / ai volts on the ith scan in the
+jth interval (ie voltage).	  
+

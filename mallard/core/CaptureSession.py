@@ -52,15 +52,24 @@ class CaptureSession:
         """
         self.loadSettings(path)
         # load data
+        self.settings.filename = path
         self.fileManager.loadData(path, self.dmanager)
+
         self.hasData = True
 
     def saveSession(self):
         """
         Save session to current filename
         """
-        self.fileManager.writeCapture(self.dmanager.getVoltage(), 
-                                      self.dmanager.getCounts())
+        self.fileManager.writeCapture(self.dmanager.getRawCountData(),
+                                      self.dmanager.getRawAIData(),
+                                      self.dmanager.getCombinedData())
+
+    def loadData(self, volts, count, ai):
+        """
+        Loads data in given a previous capture
+        """
+        
 
     def saveSessionAs(self, path):
         """

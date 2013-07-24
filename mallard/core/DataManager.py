@@ -41,7 +41,7 @@ class DataManager:
 
         # numpy array representing all different voltages
         # scanned over
-        self.voltage =  np.arange( self.settings.voltageMin, 
+        self.voltArray =  np.arange( self.settings.voltageMin, 
                                    self.settings.voltageMax, 
                                    self.voltsPerInterval )
 
@@ -56,26 +56,7 @@ class DataManager:
         """
         self.rawCountData[scan][interval] = countData
         self.rawAIData[scan][interval] = aiData
-
-        self.graphManager.plot(self.voltage, self.getCombinedCounts())
-
-    def setData(self, (volts, count)):
-        """
-        Sets voltage and counts given
-        the voltage and count
-        """
-        self.voltage = volts
-        self.counts = count
-
-
-    def combineCounts(self):
-        """
-        Adds all the counts at a given voltage
-        together into self.counts
-        """
-        self.counts = np.zeros(self.settings.intervalsPerScan)
-        for c in self.countArrayList:
-            self.counts = np.add(c, self.counts)
+        self.graphManager.plot(self.voltArray, self.getCombinedCounts())
 
 
     def registerGraphManager(self, graphManager):
@@ -84,7 +65,6 @@ class DataManager:
         updating of the graphs
         """
         self.graphManager = graphManager
-        print "loc: " + str(self)
 
     def getCombinedCounts(self):
         """
@@ -100,5 +80,24 @@ class DataManager:
         """
         return np.mean(self.rawAIData, axis=0)
 
+    def getVoltageArray(self):
+        """
+        Returns an array of the measured
+        voltages
+        """
+        return self.voltArray
 
+    def getCombinedData(self):
+        """
+        Returns voltage, counts and ai
+        stacked together
+        """
+        return np.column_stack((self.getVoltageArray(),
+                                self.getCombinedCounts(),
+                                self.getCombinedAI()))
 
+    def getRawCountData(self):
+        return self.rawCountData
+
+    def getRawAIData(self):
+        return self.rawAIData
