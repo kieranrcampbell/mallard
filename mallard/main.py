@@ -14,7 +14,7 @@ import wx
 if __name__ == "__main__":
     # application variables
     size = (900, 700)
-    title = "Data Acqusition for Isolde"
+    title = "Mallard - Data Acquisition for CRIS"
 
 
     app = wx.App()

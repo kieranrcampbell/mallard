@@ -12,6 +12,8 @@ import numpy as np
 from SessionSettings import SessionSettings
 from DataManager import DataManager
 
+import os.path
+
 class FileManager:
     """
     Manages all writing of files, both data and settings
@@ -40,7 +42,7 @@ class FileManager:
         for k in d:
             header.append(",".join((k,str(d[k]))))
         
-        if integrated = True:
+        if (integrated):
             header.append('voltage,count,ai')
         return "\n".join(header) + "\n"
 
@@ -48,31 +50,31 @@ class FileManager:
         """
         """
         filename = self.getName(self.settings.filename)
+        filename = str(filename)
         h = self.constructHeader(True)
 
         # integrated count
         f = filename + ".integrated.csv"
+        print "Saving to file: " + f
         np.savetxt(f, integratedData, delimiter=",",
                    header = h,
-                   fmt = "%f,%i")
+                   fmt = "%f,%i,%f")
 
         h = self.constructHeader(False)
         # raw count
-        f = filename + ".raw.count.csv"
+        f = filename + ".raw.counts.csv"
         np.savetxt(f, rawCountData, delimiter=",",
-                   header = h,
-                   fmt = "%f,%i")
+                   header = h)
 
         # raw AI
         f = filename + ".raw.ai.csv"
         np.savetxt(f, rawAIData, delimiter=",",
-                   header = h,
-                   fmt = "%f,%i")
+                   header = h)
         
 
         
         
-    def getName(self, s):
+    def getName(self, path):
         """
         Parses filenames of the format
         [somepath]mycapture.integrated.csv
@@ -81,18 +83,17 @@ class FileManager:
         to just return "[somepath]mycapture", or
         -1 if there's an error
         """
-        s = s.split(".csv")[0].split(".")
-        fName = None
+        s = path.split(".csv")[0].split(".")
 
-        if s[-1] is "integrated":
-            fName = '.'.join(s[:-1])
+        if s[-1] == "integrated":
+            return '.'.join(s[:-1])
 
-        elif s[-1] is "raw":
-            fName = '.'.join(s[:-2])
+        elif s[-2] == "raw":
+            return '.'.join(s[:-2])
 
         else:
             # file in wrong format, throw error
-            return -1
+            return path.split(".csv")[0]
 
         return fName
 
@@ -103,8 +104,23 @@ class FileManager:
         Notice any of the three will do, just need to 
         get the others.
         """
-        data = np.loadtxt(fileName, delimiter=",")
-        dmanager.setData( (data.T[0], data.T[1]) )
+        name = self.getName(fileName)
+        rawCountName = name + ".raw.counts.csv"
+        rawAIName = name + ".raw.ai.csv"
+        print "Searching for: " + rawCountName + " " + rawAIName
+
+        if not os.path.isfile(rawCountName) or \
+           not os.path.isfile(rawAIName):
+            # need both those files to reconstruct
+            # data so throw error
+            print "Error: file something something"
+
+        else:
+            rawCountData = np.loadtxt(rawCountName, delimiter=",")
+            rawAIData = np.loadtxt(rawAIName, delimiter=",")
+            dmanager.setRawCounts(rawCountData)
+            dmanager.setRawAI(rawAIData)
+
 
     def getSettings(self, fileName):
         """

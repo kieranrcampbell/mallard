@@ -11,6 +11,7 @@ passed data from the card to store & save
 import numpy as np
 
 from mallard.gui.GraphManager import GraphManager
+from PyDAQmx import *
 
 class DataManager:
     
@@ -101,3 +102,12 @@ class DataManager:
 
     def getRawAIData(self):
         return self.rawAIData
+
+
+    def setRawCounts(self, counts):
+        self.rawCountData = counts
+
+    def setRawAI(self, ai):
+        self.rawAIData = ai
+
+

@@ -6,10 +6,10 @@
 #- Add extra channels to GUI
 #- Thread Interface
 #- Modify datamanager to store AI
-- Modify filemanager to store AI
+# Modify filemanager to store AI
 - Add second graph to plot ai
 - Add kill interface
-
+- Create error reporting back to gui
 
 
 File capture:
