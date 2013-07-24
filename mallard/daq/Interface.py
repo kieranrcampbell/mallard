@@ -89,6 +89,7 @@ class Interface(Thread):
         """
         Main acquire loop
         """
+        lastCount = uInt32(0)
         countData = uInt32(0) # the counter
         aiData = float64(0)
         
@@ -107,13 +108,17 @@ class Interface(Thread):
         # begin acquisition loop
         for i in range(self.settings.scans):
             for j in range(self.settings.intervalsPerScan):
+
                 DAQmxReadCounterScalarU32(self.countTaskHandle, 
                                           self.timeout,
                                           byref(countData), None)
-                DAQmxReadAnalogScalarF64(aiTaskHandle, timout, 
+                DAQmxReadAnalogScalarF64(self.aiTaskHandle, self.timeout,
                                          byref(aiData), None)
 
-                self.callbackFunc(i, j, countData, aoVoltage)
+                self.callbackFunc(i, j, countData.value - lastCount.value,
+                                  aiData.value)
+                
+                lastCount.value = countData.value
                 aoVoltage = j * voltsPerInterval
                 DAQmxWriteAnalogScalarF64(self.aoTaskHandle, 
                                           True, self.timeout,

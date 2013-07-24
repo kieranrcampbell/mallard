@@ -63,6 +63,8 @@ class FileManager:
         h = self.constructHeader(False)
         # raw count
         f = filename + ".raw.counts.csv"
+
+        print "rawCOunt data shape: " + str(rawCountData.shape)
         np.savetxt(f, rawCountData, delimiter=",",
                    header = h)
 

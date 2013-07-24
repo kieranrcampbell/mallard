@@ -24,7 +24,7 @@ class SessionSettings:
         self.voltageMax = 5
 
         # number of voltages to record for per scan
-        self.intervalsPerScan = 100
+        self.intervalsPerScan = 50
 
         self.scans = 1
         

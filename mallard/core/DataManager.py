@@ -55,6 +55,7 @@ class DataManager:
         coutData: counts from MCP
         aiData: AI reading at that voltage
         """
+
         self.rawCountData[scan][interval] = countData
         self.rawAIData[scan][interval] = aiData
         self.graphManager.plot(self.voltArray, self.getCombinedCounts())
