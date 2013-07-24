@@ -42,7 +42,7 @@
 
 <ul>
 <li><a href="#installation">Installation</a></li>
-<li><a href="#usage">Usage</a></li>
+<li><a href="#operation">Operation</a></li>
 <li><a href="#development">Development</a></li>
 <li><a href="#authors">Authors</a></li>
 </ul><h3>
@@ -50,8 +50,8 @@
 
 <p>Mallard is written in python and so requires a python distribution such as <a href="https://store.continuum.io/">Anaconda</a>.</p>
 
-<h4>
-<a name="dependences" class="anchor" href="#dependences"><span class="octicon octicon-link"></span></a>Dependences</h4>
+<h5>
+<a name="dependences" class="anchor" href="#dependences"><span class="octicon octicon-link"></span></a>Dependences</h5>
 
 <p>Mallard has the following dependencies:</p>
 
@@ -62,11 +62,60 @@
 <li><a href="http://pythonhosted.org/PyDAQmx/">PyDAQmx</a></li>
 </ul><p>Mallard also uses <a href="http://www.ni.com/dataacquisition/nidaqmx.htm">NI-DAQmx</a> from National Instruments to interface the <strong>USB-6211</strong> card.</p>
 
-<h4>
-<a name="setup" class="anchor" href="#setup"><span class="octicon octicon-link"></span></a>Setup</h4>
+<h5>
+<a name="setup" class="anchor" href="#setup"><span class="octicon octicon-link"></span></a>Setup</h5>
 
 <h3>
-<a name="usage" class="anchor" href="#usage"><span class="octicon octicon-link"></span></a>Usage</h3>
+<a name="operation" class="anchor" href="#operation"><span class="octicon octicon-link"></span></a>Operation</h3>
+
+<p>Mallard sets the voltage of the laser, scanning across a given range multiple times, while counting events from the MCP and reading voltages from an analog input corresponding to the current laser intensity. It graphs the counts and analog input voltage against a given output voltage, averages over the scans and saves to file.</p>
+
+<h5>
+<a name="key-concepts" class="anchor" href="#key-concepts"><span class="octicon octicon-link"></span></a>Key Concepts</h5>
+
+<ul>
+<li>
+<strong>Voltage minimum</strong>: The voltage from which the laser starts scanning</li>
+<li>
+<strong>Voltage maximum</strong>: The voltage to which the laser will scan</li>
+<li>
+<strong>Intervals per scan</strong>: The number of intervals to scan in the voltage range</li>
+<li>
+<strong>Scans</strong>: The number of full scans to do (from minimum to maximum across the range)</li>
+<li>
+<strong>Clock cycles per interval</strong>: The number of onboard clock cycles to wait per scan (known as the 'rate' in NI terminology, 100 is a good number)</li>
+<li>
+<strong>Analog input</strong>: Analog input channel (default /Dev1/ai2)</li>
+<li>
+<strong>Counter input</strong>: Input channel for counting events. This is a 'virtual' channel, which requires looking at the NI handbook, but Dev1/ctr1 corresponds to Dev1/PFI1 on the 6211</li>
+<li>
+<strong>Analog output</strong>: Analog output channel (default /Dev1/ao0)</li>
+<li>
+<strong>Clock input</strong>: Input channel for the pseudo-trigger clock</li>
+</ul><h5>
+<a name="file-output" class="anchor" href="#file-output"><span class="octicon octicon-link"></span></a>File Output</h5>
+
+<p>When mallard runs it creates two datasets: every count measurement at every interval across every scan, and likewise for the analog input readings. These are then averaged over the scans to give a third 'integrated' dataset. As such, mallard outputs 3 data files. If the capture name is 'mycapture' then these files are:</p>
+
+<ul>
+<li>
+<strong>mycapture.integrated.csv</strong>: contains the integrated (final) dataset across all scans</li>
+<li>
+<strong>mycapture.raw.counts.csv</strong>: contains the raw count data for all intervals and scans</li>
+<li>
+<strong>mycapture.raw.ai.csv</strong>: contains the raw analog input information for all intervals and scans</li>
+</ul><p>Each of these files is in comma separated value format and contains a header, denoted by '#' at the beginning of each line, containing the settings listed in key concepts above. As such, any file can be used to recover capture settings for a new capture.</p>
+
+<p>Mallard doesn't yet have any in built analysis, but with the data in this format it should be easy enough. The data can be opened directly in excel, or using numpy in python as follows:</p>
+
+<div class="highlight"><pre><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="s">'mycapture.integrated.csv'</span><span class="p">)</span>
+<span class="n">voltage_intervals</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">T</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="c"># need to transpose matrix</span>
+<span class="n">counts</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">T</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+<span class="n">ai_readings</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">T</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+</pre></div>
+
+<p>and <code>voltage</code>, <code>counts</code> and <code>ai_readings</code> can be analysed using any of the standard tools in SciPy.</p>
 
 <h3>
 <a name="development" class="anchor" href="#development"><span class="octicon octicon-link"></span></a>Development</h3>
