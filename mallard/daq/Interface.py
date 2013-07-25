@@ -20,14 +20,13 @@ from PyDAQmx import *
 from PyDAQmx.DAQmxConstants import *
 from PyDAQmx.DAQmxFunctions import *
 
-from threading import Thread
+from multiprocessing import Pipe
 
 class Interface(Thread):
     """
     Provides physical interface & callback using PyDAQmx
     """
     def __init__(self, callbackFunc):
-        Thread.__init__(self)
 
         self.settings = None
 
@@ -49,7 +48,7 @@ class Interface(Thread):
 
         # create tasks
         DAQmxCreateTask("", byref(self.countTaskHandle))
-        DAQmxCreateTask("", byref(self.aoTaskHandle))
+         DAQmxCreateTask("", byref(self.aoTaskHandle))
         DAQmxCreateTask("", byref(self.aiTaskHandle))
 
         # configure channels
@@ -77,15 +76,7 @@ class Interface(Thread):
         DAQmxStartTask(self.aoTaskHandle)
         DAQmxStartTask(self.aiTaskHandle)
 
-    def acquire(self):
-        """
-        Due to the threaded nature, starting the thread
-        via acquire() (bit legacy, also nice) will then
-        call run()
-        """
-        self.start()
-
-    def run(self):
+    def acquire(self, pipe):
         """
         Main acquire loop
         """
@@ -115,18 +106,19 @@ class Interface(Thread):
                 DAQmxReadAnalogScalarF64(self.aiTaskHandle, self.timeout,
                                          byref(aiData), None)
 
-                self.callbackFunc(i, j, countData.value - lastCount.value,
-                                  aiData.value)
-                
-                lastCount.value = countData.value
                 aoVoltage = j * voltsPerInterval
                 DAQmxWriteAnalogScalarF64(self.aoTaskHandle, 
                                           True, self.timeout,
                                           aoVoltage, None)
 
+                # self.callbackFunc(i, j, countData.value - lastCount.value,
+                #                   aiData.value)
+                #pipe.send( data )
+                
+                lastCount.value = countData.value
+
 
         self.stopTasks()
-        self._Thread__stop()
 
             
     def stopTasks(self):

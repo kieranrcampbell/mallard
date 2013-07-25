@@ -106,3 +106,5 @@ class CaptureSession:
         return self.settings.scans
 
         
+    def clearGraph(self):
+        self.dmanager.graphManager.clearPlot()

@@ -96,6 +96,7 @@ class MFrame(wx.Frame):
         # Graph menu
         graphMenu = wx.Menu()
         showGraph = graphMenu.Append(wx.ID_ANY, "Show graph", "Show graph")
+        clearGraph = graphMenu.Append(wx.ID_ANY, "Clear all", "Clear all")
 
         menubar.Append(graphMenu, '&Graph')
 
@@ -115,6 +116,7 @@ class MFrame(wx.Frame):
 
         # graph events
         self.Bind(wx.EVT_MENU, self.onShowGraph, showGraph)
+        self.Bind(wx.EVT_MENU, self.onClearGraph, clearGraph)
 
     def createPanel(self):
         """
@@ -229,6 +231,9 @@ class MFrame(wx.Frame):
                 return
 
             self.notebook.getOpenTab().session.createGraphFromSession()
+
+    def onClearGraph(self, event):
+        self.notebook.getOpenTab().session.clearGraph()
 
     def onChangeName(self, event):
 

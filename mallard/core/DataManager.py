@@ -60,9 +60,9 @@ class DataManager:
         self.rawAIData[scan][interval] = aiData
         
         # update graphs on gui
-        self.graphManager.plot(self.voltArray, 
-                               self.getCombinedCounts(scan),
-                               self.getCombinedAI(scan))
+        # self.graphManager.plot(self.voltArray, 
+        #                        self.getCombinedCounts(scan),
+        #                        self.getCombinedAI(scan))
 
 
 
@@ -80,14 +80,14 @@ class DataManager:
         Sometimes we only want to mean the first meanTo columns
         for displaying on the graph
         """
-        return np.mean(self.rawCountData[:meanTo], axis=0)
+        return np.mean(self.rawCountData[:meanTo+1], axis=0)
 
     def getCombinedAI(self, meanTo):
         """
         Returns a numpy array of the AI readings
         averaged over each scan
         """
-        return np.mean(self.rawAIData[:meanTo], axis=0)
+        return np.mean(self.rawAIData[:meanTo+1], axis=0)
 
     def getVoltageArray(self):
         """
