@@ -100,29 +100,6 @@ class FileManager:
         return fName
 
 
-    def loadData(self, fileName, dmanager):
-        """
-        Loads voltages and count from fileName.
-        Notice any of the three will do, just need to 
-        get the others.
-        """
-        name = self.getName(fileName)
-        rawCountName = name + ".raw.counts.csv"
-        rawAIName = name + ".raw.ai.csv"
-        print "Searching for: " + rawCountName + " " + rawAIName
-
-        if not os.path.isfile(rawCountName) or \
-           not os.path.isfile(rawAIName):
-            # need both those files to reconstruct
-            # data so throw error
-            print "Error: file something something"
-
-        else:
-            rawCountData = np.loadtxt(rawCountName, delimiter=",")
-            rawAIData = np.loadtxt(rawAIName, delimiter=",")
-            dmanager.setRawCounts(rawCountData)
-            dmanager.setRawAI(rawAIData)
-
 
     def getSettings(self, fileName):
         """

@@ -55,16 +55,6 @@ class CaptureSession:
         self.settings = self.fileManager.getSettings(path)
         self.settings.filename = ""
 
-    def loadSession(self, path):
-        """
-        Loads a session from a file
-        """
-        self.loadSettings(path)
-        # load data
-        self.settings.filename = path
-        self.fileManager.loadData(path, self.dmanager)
-
-        self.hasData = True
 
     def saveSession(self):
         """
@@ -74,12 +64,6 @@ class CaptureSession:
                                       self.dmanager.getRawAIData(),
                                       self.dmanager.getCombinedData())
 
-    def loadData(self, volts, count, ai):
-        """
-        Loads data in given a previous capture
-        """
-        
-        
 
     def saveSessionAs(self, path):
         """

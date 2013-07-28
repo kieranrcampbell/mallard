@@ -1,19 +1,19 @@
 -  todo
 #- done
 
-- Integrate analog input from timer into Interface
+#- Integrate analog input from timer into Interface
 #- Change settings and re-word so analog input output + counter is clearer
 #- Add extra channels to GUI
 #- Thread Interface
 #- Modify datamanager to store AI
 # Modify filemanager to store AI
-- Add second graph to plot ai
+#- Add second graph to plot ai
 - Add kill interface
 - Create error reporting back to gui
 #- Go from self.notebook.getOpenTab().session to
 #  self.notebook.getOpenSession() as gui is never really accessed
-- Redo Thread -> process
-
+#- Redo Thread -> process
+- Remove any loading of previous data (pointless)
 
 File capture:
 Say I have a capture called 'mycapture', then we generate
