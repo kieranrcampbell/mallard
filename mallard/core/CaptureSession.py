@@ -11,10 +11,19 @@ kieran.renfrew.campbell@cern.ch
 
 """
 
-from mallard.daq.Interface import Interface
+from mallard.daq.Acquire import acquire
 from DataManager import DataManager
 from SessionSettings import SessionSettings
 from FileManager import FileManager
+
+from multiprocessing import Process, Queue
+
+# def acquire(interface, queue):
+#     """
+#     Needs to be defined to get round
+#     pickling difficulties when using multiprocessing
+#     """
+#     interface.acquire(queue)
 
 
 class CaptureSession:
@@ -70,6 +79,7 @@ class CaptureSession:
         Loads data in given a previous capture
         """
         
+        
 
     def saveSessionAs(self, path):
         """
@@ -88,9 +98,16 @@ class CaptureSession:
         
         self.dmanager.initialise(self.settings) 
 
-        interface = Interface(self.dmanager.dataCallback)    
-        interface.createTask(self.settings)
-        interface.acquire()
+        # interface = Interface(self.dmanager.dataCallback)    
+        # interface.createTask(self.settings)
+
+        q = Queue()
+        captureProcess = Process(target=acquire,
+                                 args=(self.settings, q,))
+        captureProcess.start()
+        
+        self.dmanager.dataCallback(q)
+        captureProcess.join()
 
         self.hasData = True
 

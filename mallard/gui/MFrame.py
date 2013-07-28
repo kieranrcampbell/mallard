@@ -143,12 +143,12 @@ class MFrame(wx.Frame):
         """
         if self.assertOpenCapture():
 
-            if self.notebook.getOpenTab().session.settings.filename \
+            if self.notebook.getOpenSession().settings.filename \
                     is "":
                 self.onSaveAs(event)
         
             else:
-                self.notebook.getOpenTab().session.saveSession()
+                self.notebook.getOpenSession().saveSession()
 
     def onSaveAs(self, event):
         """
@@ -156,14 +156,14 @@ class MFrame(wx.Frame):
         """
         if self.assertOpenCapture():
 
-            name = self.notebook.getOpenTab().session.settings.name
+            name = self.notebook.getOpenSession().settings.name
             saveFileDialog = wx.FileDialog(self, "Save As", "", 
                                            name + '.csv',
                                            "CSV files (*.csv)|*.csv",
                                            wx.FD_SAVE)
             if saveFileDialog.ShowModal() == wx.ID_OK:
                 path = saveFileDialog.GetPath()
-                self.notebook.getOpenTab().session.saveSessionAs(path)
+                self.notebook.getOpenSession().saveSessionAs(path)
                                        
 
     def onCaptureOpen(self, event):
@@ -225,26 +225,26 @@ class MFrame(wx.Frame):
 
     def onShowGraph(self, event):
         if self.assertOpenCapture():
-            if not self.notebook.getOpenTab().session.hasData:
+            if not self.notebook.getOpenSession().hasData:
                 wx.MessageBox('No open captures', 'Error',
                               wx.OK | wx.ICON_INFORMATION)
                 return
 
-            self.notebook.getOpenTab().session.createGraphFromSession()
+            self.notebook.getOpenSession().createGraphFromSession()
 
     def onClearGraph(self, event):
-        self.notebook.getOpenTab().session.clearGraph()
+        self.notebook.getOpenSession().clearGraph()
 
     def onChangeName(self, event):
 
         if self.assertOpenCapture():
-            name = self.notebook.getOpenTab().session.getName()
+            name = self.notebook.getOpenSession().getName()
             dlg = wx.TextEntryDialog(
                 self, 'Enter new name', 'Rename', name)
 
             if dlg.ShowModal() == wx.ID_OK:
                 name = dlg.GetValue()
-                self.notebook.getOpenTab().session.setName(name)
+                self.notebook.getOpenSession().setName(name)
                 self.notebook.SetPageText(
                     self.notebook.GetSelection(), name )
 

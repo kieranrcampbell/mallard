@@ -10,8 +10,8 @@
 - Add second graph to plot ai
 - Add kill interface
 - Create error reporting back to gui
-- Go from self.notebook.getOpenTab().session to
-  self.notebook.getOpenSession() as gui is never really accessed
+#- Go from self.notebook.getOpenTab().session to
+#  self.notebook.getOpenSession() as gui is never really accessed
 - Redo Thread -> process
 
 

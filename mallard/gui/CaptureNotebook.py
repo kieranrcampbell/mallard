@@ -29,7 +29,6 @@ class CaptureNotebook(wx.Notebook):
         Callback to add a new tab
         """
         tab = CapturePane(self)
-#        tab.SetBackgroundColour("Gray")
         self.AddPage(tab, title)
         self.SetSelection(self.GetPageCount() - 1)
 
@@ -43,8 +42,8 @@ class CaptureNotebook(wx.Notebook):
     def getTabList(self):
         return self.tabs
 
-    def getOpenTab(self):
-        return self.tabs[self.GetSelection()]
+    def getOpenSession(self):
+        return self.tabs[self.GetSelection()].session
 
     def getTab(self, n):
         """ 

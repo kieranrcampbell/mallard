@@ -22,7 +22,7 @@ from PyDAQmx.DAQmxFunctions import *
 
 from multiprocessing import Pipe
 
-class Interface(Thread):
+class Interface:
     """
     Provides physical interface & callback using PyDAQmx
     """
@@ -48,7 +48,7 @@ class Interface(Thread):
 
         # create tasks
         DAQmxCreateTask("", byref(self.countTaskHandle))
-         DAQmxCreateTask("", byref(self.aoTaskHandle))
+        DAQmxCreateTask("", byref(self.aoTaskHandle))
         DAQmxCreateTask("", byref(self.aiTaskHandle))
 
         # configure channels
@@ -76,7 +76,7 @@ class Interface(Thread):
         DAQmxStartTask(self.aoTaskHandle)
         DAQmxStartTask(self.aiTaskHandle)
 
-    def acquire(self, pipe):
+    def acquire(self, queue):
         """
         Main acquire loop
         """
@@ -113,7 +113,8 @@ class Interface(Thread):
 
                 # self.callbackFunc(i, j, countData.value - lastCount.value,
                 #                   aiData.value)
-                #pipe.send( data )
+                c = countData.value - lastCount.value
+                queue.put( [i, j, c, aiData.value ] )
                 
                 lastCount.value = countData.value
 

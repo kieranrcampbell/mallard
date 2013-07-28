@@ -7,7 +7,7 @@ kieran.renfrew.campbell@cern.ch
 
 """
 
-from gui.MFrame import MFrame
+from mallard.gui.MFrame import MFrame
 import wx
 
 

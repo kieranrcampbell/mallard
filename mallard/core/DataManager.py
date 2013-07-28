@@ -13,6 +13,8 @@ import numpy as np
 from mallard.gui.GraphManager import GraphManager
 from PyDAQmx import *
 
+from multiprocessing import Queue
+
 class DataManager:
     
     def __init__(self, settings):
@@ -48,7 +50,7 @@ class DataManager:
 
 
 
-    def dataCallback(self, scan, interval, countData, aiData):
+    def dataCallback(self, queue):
         """
         Interval is the voltage interval, so the current
         voltage is interval * self.voltsPerInterval
@@ -56,13 +58,22 @@ class DataManager:
         aiData: AI reading at that voltage
         """
 
-        self.rawCountData[scan][interval] = countData
-        self.rawAIData[scan][interval] = aiData
+        for i in range(self.settings.scans):
+            for j in range(self.settings.intervalsPerScan):
+
+                (scan, interval, count, ai) = queue.get()
+
+                if i != scan or j != interval:
+                    print "Process sync error"
+
+                self.rawCountData[scan][interval] = count
+                self.rawAIData[scan][interval] = ai
         
-        # update graphs on gui
-        # self.graphManager.plot(self.voltArray, 
-        #                        self.getCombinedCounts(scan),
-        #                        self.getCombinedAI(scan))
+                # update graphs on gui every 10 points
+                if j % 5 is 0 or j is self.settings.intervalsPerScan - 1:
+                    self.graphManager.plot(self.voltArray, 
+                                           self.getCombinedCounts(scan),
+                                           self.getCombinedAI(scan))
 
 
 
