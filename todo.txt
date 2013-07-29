@@ -13,7 +13,9 @@
 #- Go from self.notebook.getOpenTab().session to
 #  self.notebook.getOpenSession() as gui is never really accessed
 #- Redo Thread -> process
-- Remove any loading of previous data (pointless)
+#- Remove any loading of previous data (pointless)
+- Fix range e.g 0-5 currently does 0-4.9
+- (Somehow) fix weird averaging on graphing
 
 File capture:
 Say I have a capture called 'mycapture', then we generate

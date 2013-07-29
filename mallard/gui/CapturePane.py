@@ -30,12 +30,12 @@ class CapturePane(wx.Panel):
     """ 
     Represents an individual tab in CaptureNotebook
     """
-    def __init__(self, parent):
+    def __init__(self, parent, statusCallback):
         wx.Panel.__init__(self, parent = parent,
                           id = wx.ID_ANY)
 
         # main session that does all analysis
-        self.session = CaptureSession()
+        self.session = CaptureSession(statusCallback)
         self.countSubplot = None
         self.aiSubplot = None
 

@@ -24,11 +24,13 @@ class CaptureNotebook(wx.Notebook):
         self.tabs = [] # list of open tabs
         
 
-    def addTab(self, title):
+    def addTab(self, title, statusCallback):
         """
-        Callback to add a new tab
+        statusCallback is a function to provide
+        some status to system - in this case
+        the status bar
         """
-        tab = CapturePane(self)
+        tab = CapturePane(self, statusCallback)
         self.AddPage(tab, title)
         self.SetSelection(self.GetPageCount() - 1)
 

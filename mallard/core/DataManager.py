@@ -17,16 +17,19 @@ from multiprocessing import Queue
 
 class DataManager:
     
-    def __init__(self, settings):
-        self.initialise(settings)
+    def __init__(self, settings, statusCallback):
+        self.initialise(settings, statusCallback)
 
-    def initialise(self, settings):
+    def initialise(self, settings, statusCallback):
         """
         Need to restart the datamanager, but can't
         create a new object due to memory position
         for callbacks
+        statusCallback is a function to provide
+        info back to the gui
         """
         self.settings = settings
+        self.statusCallback = statusCallback
 
         # raw analog input data for all measurements
         self.rawAIData = np.zeros((self.settings.scans,
@@ -59,6 +62,9 @@ class DataManager:
         """
 
         for i in range(self.settings.scans):
+            self.statusCallback("Scan " + str(i+1) + " of " + \
+                                str(self.settings.scans))
+
             for j in range(self.settings.intervalsPerScan):
 
                 (scan, interval, count, ai) = queue.get()

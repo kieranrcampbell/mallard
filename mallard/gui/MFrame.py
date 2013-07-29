@@ -46,6 +46,9 @@ class MFrame(wx.Frame):
         """
         self.createMenu()
         self.createPanel()
+
+        self.sb = self.CreateStatusBar()
+
         self.Centre()
         self.Show()
 
@@ -132,7 +135,7 @@ class MFrame(wx.Frame):
         """
         User has indicated new capture
         """
-        self.notebook.addTab("New tab")
+        self.notebook.addTab("New tab", self.setSBText)
 
     def onSave(self, event):
         """
@@ -241,4 +244,8 @@ class MFrame(wx.Frame):
 
         return True
 
-
+    def setSBText(self, text):
+        """
+        Sets the text on the status bar
+        """
+        self.sb.SetStatusText(text)

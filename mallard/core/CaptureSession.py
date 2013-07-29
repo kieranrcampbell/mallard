@@ -30,12 +30,12 @@ class CaptureSession:
     """
     Interfaces between card, gui and data buffers
     """    
-    def __init__(self):
+    def __init__(self, statusCallback):
         self.settings = SessionSettings()
         self.fileManager = FileManager(self.settings)
-        self.dmanager = DataManager(self.settings) 
+        self.dmanager = DataManager(self.settings, statusCallback) 
         self.hasData = False # no data currently loaded
-
+        self.statusCallback = statusCallback
 
     def setName(self, name):
         """
@@ -80,7 +80,7 @@ class CaptureSession:
         """
         self.settings.sanitise()
         
-        self.dmanager.initialise(self.settings) 
+        self.dmanager.initialise(self.settings, self.statusCallback) 
 
         # interface = Interface(self.dmanager.dataCallback)    
         # interface.createTask(self.settings)
