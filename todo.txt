@@ -13,11 +13,11 @@
 #- Redo Thread -> process
 #- Remove any loading of previous data (pointless)
 - Fix range e.g 0-5 currently does 0-4.9
-- (Somehow) fix weird averaging on graphing
+#- (Somehow) fix weird averaging on graphing
 - Add kill interface
 - Create error reporting back to gui
 - Maybe run multiprocess spawn on separate thread?
-
+- Fix naming on save 
 
 File capture:
 Say I have a capture called 'mycapture', then we generate

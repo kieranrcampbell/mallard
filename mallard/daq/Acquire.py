@@ -70,7 +70,7 @@ def acquire(settings, queue):
 
     voltsPerInterval = (settings.voltageMax - \
                         settings.voltageMin) \
-                       / float(settings.intervalsPerScan)
+                       / float(settings.intervalsPerScan - 1)
 
 
     DAQmxWriteAnalogScalarF64(aoTaskHandle, True, 
@@ -98,7 +98,7 @@ def acquire(settings, queue):
             queue.put( (i, j, c, aiData.value) )
 
             lastCount.value = countData.value
-
+ 
 
     """
     Halts current tasks

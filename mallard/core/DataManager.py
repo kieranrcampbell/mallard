@@ -43,13 +43,15 @@ class DataManager:
 
         self.voltsPerInterval = \
             (self.settings.voltageMax - self.settings.voltageMin) \
-            / float(self.settings.intervalsPerScan)
+            / float(self.settings.intervalsPerScan - 1)
 
         # numpy array representing all different voltages
-        # scanned over
-        self.voltArray =  np.arange( self.settings.voltageMin, 
-                                   self.settings.voltageMax, 
-                                   self.voltsPerInterval )
+        # scanned over - nb can't use arange here
+        l = []
+        for i in range(self.settings.intervalsPerScan):
+            l.append(i * self.voltsPerInterval)
+        self.voltArray = np.array(l)
+        print str(self.voltArray)
 
 
 
@@ -64,8 +66,6 @@ class DataManager:
         counts = ai = np.zeros((self.settings.intervalsPerScan,))
 
         for i in range(self.settings.scans):
-            self.statusCallback("Scan " + str(i+1) + " of " + \
-                                str(self.settings.scans))
 
             oldCounts = counts
             oldAi = ai
@@ -82,6 +82,14 @@ class DataManager:
         
                 # update graphs on gui every 10 points
                 if j % 5 is 0 or j is self.settings.intervalsPerScan - 1:
+                    
+                    # update status bar
+                    s = "Scan " + str(i+1) + " of " + \
+                        str(self.settings.scans) + "\t Voltage: " + \
+                        str(self.voltsPerInterval * interval) + " V"
+
+                    self.statusCallback(s)
+
                     counts = self.getCombinedCounts(scan)
                     ai = self.getCombinedAI(scan)
 
