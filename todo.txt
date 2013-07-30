@@ -12,12 +12,16 @@
 #  self.notebook.getOpenSession() as gui is never really accessed
 #- Redo Thread -> process
 #- Remove any loading of previous data (pointless)
-- Fix range e.g 0-5 currently does 0-4.9
+#- Fix range e.g 0-5 currently does 0-4.9
 #- (Somehow) fix weird averaging on graphing
+#- Convert all package names to lowercase
+
 - Add kill interface
 - Create error reporting back to gui
 - Maybe run multiprocess spawn on separate thread?
 - Fix naming on save 
+- Command line utility to integrate data?
+- Package it up!
 
 File capture:
 Say I have a capture called 'mycapture', then we generate

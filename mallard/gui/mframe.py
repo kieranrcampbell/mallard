@@ -13,8 +13,8 @@ import wx
 import matplotlib
 import pylab
 
-from CapturePane import CapturePane
-from CaptureNotebook import CaptureNotebook
+from capturepane import CapturePane
+from capturenotebook import CaptureNotebook
 
 
 
@@ -87,6 +87,8 @@ class MFrame(wx.Frame):
         captureMenu = wx.Menu()
         captureSettings = captureMenu.Append(wx.ID_ANY, "Settings",
                                           "Current Capture Settings")
+        captureKill = captureMenu.Append(wx.ID_ANY, "Kill Capture",
+                                         "Kill Running Capture")
         menubar.Append(captureMenu, '&Capture')
 
         changeName = captureMenu.Append(wx.ID_ANY, "Rename session",
@@ -113,6 +115,7 @@ class MFrame(wx.Frame):
         self.Bind(wx.EVT_MENU, self.onCaptureSettings,
                   captureSettings)
         self.Bind(wx.EVT_MENU, self.onChangeName, changeName)
+        self.Bind(wx.EVT_MENU, self.onKillCapture, captureKill)
 
         # graph events
         self.Bind(wx.EVT_MENU, self.onShowGraph, showGraph)
@@ -231,6 +234,16 @@ class MFrame(wx.Frame):
                 self.notebook.SetPageText(
                     self.notebook.GetSelection(), name )
 
+
+    def onKillCapture(self, event):
+
+        if self.assertOpenCapture():
+            if self.getOpenSession().isCapturing():
+                self.getOpenSession().killCapture()
+
+            else:
+                wx.MessageBox('No capture in progress', 'Error',
+                              wx.OK | wx.ICON_INFORMATION)
 
     def assertOpenCapture(self):
         """

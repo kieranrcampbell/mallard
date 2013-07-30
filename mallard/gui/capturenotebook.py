@@ -9,7 +9,7 @@ kieran.renfrew.campbell@cern.ch
 
 import wx
 
-from CapturePane import CapturePane
+from capturepane import CapturePane
 
 class CaptureNotebook(wx.Notebook):
     """

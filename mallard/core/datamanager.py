@@ -10,7 +10,7 @@ passed data from the card to store & save
 
 import numpy as np
 
-from mallard.gui.GraphManager import GraphManager
+from mallard.gui.graphmanager import GraphManager
 from PyDAQmx import *
 
 from multiprocessing import Queue

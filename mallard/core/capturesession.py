@@ -11,10 +11,10 @@ kieran.renfrew.campbell@cern.ch
 
 """
 
-from mallard.daq.Acquire import acquire
-from DataManager import DataManager
-from SessionSettings import SessionSettings
-from FileManager import FileManager
+from mallard.daq.acquire import acquire
+from datamanager import DataManager
+from sessionsettings import SessionSettings
+from filemanager import FileManager
 
 from multiprocessing import Process, Queue
 
@@ -82,9 +82,6 @@ class CaptureSession:
         
         self.dmanager.initialise(self.settings, self.statusCallback) 
 
-        # interface = Interface(self.dmanager.dataCallback)    
-        # interface.createTask(self.settings)
-
         q = Queue()
         captureProcess = Process(target=acquire,
                                  args=(self.settings, q,))
@@ -109,3 +106,16 @@ class CaptureSession:
         
     def clearGraph(self):
         self.dmanager.graphManager.clearPlot()
+
+    def killCapture(self):
+        """
+        Kills running capture. Program's behavious
+        may become undefined
+        """
+        self.captureProcess.terminate()
+
+    def isCapturing(self):
+        """
+        Returns true if capturing is in progress
+        """
+        return self.captureProcess.is_alive()

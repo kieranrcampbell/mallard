@@ -21,10 +21,10 @@ from matplotlib.backends.backend_wxagg import \
     NavigationToolbar2WxAgg as NavigationToolbar
 
 
-from mallard.core.SessionSettings import SessionSettings
-from mallard.core.CaptureSession import CaptureSession 
-from GraphManager import GraphManager
-from SettingsDialog import SettingsDialog
+from mallard.core.sessionsettings import SessionSettings
+from mallard.core.capturesession import CaptureSession 
+from graphmanager import GraphManager
+from settingsdialog import SettingsDialog
 
 class CapturePane(wx.Panel):
     """ 

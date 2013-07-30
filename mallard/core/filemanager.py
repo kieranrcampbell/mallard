@@ -9,8 +9,8 @@ kieran.renfrew.campbell@cern.ch
 """
 
 import numpy as np
-from SessionSettings import SessionSettings
-from DataManager import DataManager
+from sessionsettings import SessionSettings
+from datamanager import DataManager
 
 import os.path
 

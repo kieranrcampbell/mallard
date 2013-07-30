@@ -7,8 +7,8 @@ kieran.renfrew.campbell@cern.ch
 
 """
 
-from CaptureSession import CaptureSession
-from DataManager import DataManager
-from SessionSettings import SessionSettings
-from FileManager import FileManager
+from capturesession import CaptureSession
+from datamanager import DataManager
+from sessionsettings import SessionSettings
+from filemanager import FileManager
 
