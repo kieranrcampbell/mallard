@@ -60,10 +60,15 @@ class DataManager:
         coutData: counts from MCP
         aiData: AI reading at that voltage
         """
+        
+        counts = ai = np.zeros((self.settings.intervalsPerScan,))
 
         for i in range(self.settings.scans):
             self.statusCallback("Scan " + str(i+1) + " of " + \
                                 str(self.settings.scans))
+
+            oldCounts = counts
+            oldAi = ai
 
             for j in range(self.settings.intervalsPerScan):
 
@@ -77,9 +82,12 @@ class DataManager:
         
                 # update graphs on gui every 10 points
                 if j % 5 is 0 or j is self.settings.intervalsPerScan - 1:
-                    self.graphManager.plot(self.voltArray, 
-                                           self.getCombinedCounts(scan),
-                                           self.getCombinedAI(scan))
+                    counts = self.getCombinedCounts(scan)
+                    ai = self.getCombinedAI(scan)
+
+                    self.graphManager.plot(self.voltArray, counts[:j], 
+                                           ai[:j], oldCounts, oldAi)
+
 
 
 

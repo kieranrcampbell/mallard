@@ -28,18 +28,20 @@ class GraphManager:
         self.aiSubplot = aiSubplot
         self.canvas = canvas
 
-    def plot(self, voltage, counts, ai ):
+    def plot(self, voltage, counts, ai, oldCounts, oldAi ):
         """
         Plots counts & ai against voltage
         """
         self.clearPlot()
         self.countSubplot.set_xlabel("Volts (V)")
         self.countSubplot.set_ylabel("Count")
-        self.countSubplot.plot(voltage, counts, 'bo')
+        self.countSubplot.plot(voltage[:len(counts)], counts, 'ko', 
+                               voltage, oldCounts, 'r')
 
         self.aiSubplot.set_xlabel("Volts (V)")
         self.aiSubplot.set_ylabel("Measured Volts (V)")
-        self.aiSubplot.plot(voltage, ai, 'k')
+        self.aiSubplot.plot(voltage[:len(ai)], ai, '--',
+                            voltage, oldAi, 'r')
 
         self.canvas.draw()
 
