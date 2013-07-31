@@ -16,10 +16,11 @@
 #- (Somehow) fix weird averaging on graphing
 #- Convert all package names to lowercase
 #- Maybe run multiprocess spawn on separate thread?
+#- Create error reporting back to gui
+#- Fix naming on save 
+
 
 - Add kill interface
-- Create error reporting back to gui
-- Fix naming on save 
 - Command line utility to integrate data?
 - Package it up!
 

@@ -138,7 +138,7 @@ class MFrame(wx.Frame):
         """
         User has indicated new capture
         """
-        self.notebook.addTab("New tab", self.setSBText)
+        self.notebook.addTab(self.setSBText)
 
     def onSave(self, event):
         """
@@ -152,6 +152,8 @@ class MFrame(wx.Frame):
         
             else:
                 self.notebook.getOpenSession().saveSession()
+
+
 
     def onSaveAs(self, event):
         """
@@ -167,6 +169,11 @@ class MFrame(wx.Frame):
             if saveFileDialog.ShowModal() == wx.ID_OK:
                 path = saveFileDialog.GetPath()
                 self.notebook.getOpenSession().saveSessionAs(path)
+
+                name = self.notebook.getOpenSession().settings.name
+                self.notebook.SetPageText(
+                    self.notebook.GetSelection(), name  )
+
                                        
 
 

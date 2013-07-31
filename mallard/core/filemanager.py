@@ -51,6 +51,11 @@ class FileManager:
         """
         filename = self.getName(self.settings.filename)
         filename = str(filename)
+
+        sessionName = filename.split("\\")[-1]
+        if self.settings.name == "new_capture":
+            self.settings.name = sessionName
+
         h = self.constructHeader(True)
 
         # integrated count

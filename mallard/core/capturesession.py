@@ -40,6 +40,8 @@ class CaptureSession:
         # method displays error popup
         self.errorFnc = errorFnc
 
+        print "name: " + str(self.settings.name)
+
     def setName(self, name):
         """
         Change the name of the current session
