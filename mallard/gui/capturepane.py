@@ -35,7 +35,7 @@ class CapturePane(wx.Panel):
                           id = wx.ID_ANY)
 
         # main session that does all analysis
-        self.session = CaptureSession(statusCallback)
+        self.session = CaptureSession(statusCallback, self.displayError)
         self.countSubplot = None
         self.aiSubplot = None
 
@@ -232,3 +232,11 @@ class CapturePane(wx.Panel):
                                  str(self.session.settings.scans), 
                                  8)
         
+
+    def displayError(self, msg):
+        """
+        Displays msg as an error message in a pop up box
+        """
+        wx.MessageBox(str(msg), 'Error',
+                      wx.OK | wx.ICON_INFORMATION)
+

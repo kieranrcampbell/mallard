@@ -47,6 +47,9 @@ class CaptureNotebook(wx.Notebook):
     def getOpenSession(self):
         return self.tabs[self.GetSelection()].session
 
+    def getOpenTab(self):
+        return self.tabs[self.GetSelection()]
+
     def getTab(self, n):
         """ 
         Returns the nth tab

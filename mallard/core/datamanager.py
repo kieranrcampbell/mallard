@@ -17,10 +17,10 @@ from multiprocessing import Queue
 
 class DataManager:
     
-    def __init__(self, settings, statusCallback):
-        self.initialise(settings, statusCallback)
+    def __init__(self, settings, statusCallback, errorFnc):
+        self.initialise(settings, statusCallback, errorFnc)
 
-    def initialise(self, settings, statusCallback):
+    def initialise(self, settings, statusCallback, errorFnc):
         """
         Need to restart the datamanager, but can't
         create a new object due to memory position
@@ -29,7 +29,10 @@ class DataManager:
         info back to the gui
         """
         self.settings = settings
+
+        # callback function for statusbar and errors
         self.statusCallback = statusCallback
+        self.errorFnc = errorFnc
 
         # raw analog input data for all measurements
         self.rawAIData = np.zeros((self.settings.scans,
@@ -51,7 +54,7 @@ class DataManager:
         for i in range(self.settings.intervalsPerScan):
             l.append(i * self.voltsPerInterval)
         self.voltArray = np.array(l)
-        print str(self.voltArray)
+
 
 
 
@@ -75,7 +78,7 @@ class DataManager:
                 (scan, interval, count, ai) = queue.get()
 
                 if i != scan or j != interval:
-                    print "Process sync error"
+                    self.errorFnc( "Process sync error" )
 
                 self.rawCountData[scan][interval] = count
                 self.rawAIData[scan][interval] = ai
