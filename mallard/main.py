@@ -8,8 +8,8 @@ kieran.renfrew.campbell@cern.ch
 """
 
 from mallard.gui.mframe import MFrame
-import wx
 
+import wx
 
 if __name__ == "__main__":
     # application variables
@@ -18,6 +18,7 @@ if __name__ == "__main__":
 
 
     app = wx.App()
+
     frame = MFrame(None, mtitle = title, msize = size)
 
     app.MainLoop()

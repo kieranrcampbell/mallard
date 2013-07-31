@@ -17,7 +17,8 @@ from PyDAQmx import *
 from PyDAQmx.DAQmxConstants import *
 from PyDAQmx.DAQmxFunctions import *
 
-from multiprocessing import Pipe
+from multiprocessing import Queue
+
 
 def acquire(settings, queue):
     settings.sanitise() # don't want things to go wrong here
@@ -98,7 +99,7 @@ def acquire(settings, queue):
             queue.put( (i, j, c, aiData.value) )
 
             lastCount.value = countData.value
- 
+
 
     """
     Halts current tasks

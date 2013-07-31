@@ -16,14 +16,11 @@ from datamanager import DataManager
 from sessionsettings import SessionSettings
 from filemanager import FileManager
 
+from threading import Thread
 from multiprocessing import Process, Queue
 
-# def acquire(interface, queue):
-#     """
-#     Needs to be defined to get round
-#     pickling difficulties when using multiprocessing
-#     """
-#     interface.acquire(queue)
+
+import wx
 
 
 class CaptureSession:
@@ -36,6 +33,7 @@ class CaptureSession:
         self.dmanager = DataManager(self.settings, statusCallback) 
         self.hasData = False # no data currently loaded
         self.statusCallback = statusCallback
+
 
     def setName(self, name):
         """
@@ -83,12 +81,17 @@ class CaptureSession:
         self.dmanager.initialise(self.settings, self.statusCallback) 
 
         q = Queue()
+
         captureProcess = Process(target=acquire,
-                                 args=(self.settings, q,))
+                                 args=(self.settings, q, ))
+
         captureProcess.start()
+
+        t = Thread(target=self.dmanager.dataCallback, args=(q,))
+        t.start()
+
+#        captureProcess.join()
         
-        self.dmanager.dataCallback(q)
-        captureProcess.join()
 
         self.hasData = True
 
