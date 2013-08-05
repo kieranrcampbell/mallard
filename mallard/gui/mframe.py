@@ -245,8 +245,8 @@ class MFrame(wx.Frame):
     def onKillCapture(self, event):
 
         if self.assertOpenCapture():
-            if self.getOpenSession().isCapturing():
-                self.getOpenSession().killCapture()
+            if self.notebook.getOpenSession().isCapturing():
+                self.notebook.getOpenSession().killCapture()
 
             else:
                 wx.MessageBox('No capture in progress', 'Error',
@@ -269,3 +269,17 @@ class MFrame(wx.Frame):
         Sets the text on the status bar
         """
         self.sb.SetStatusText(text)
+
+
+    def displayError(self, msg):
+        """
+        Displays msg as an error message in a pop up box
+        """
+        wx.MessageBox(str(msg), 'Error',
+                      wx.OK | wx.ICON_INFORMATION)
+
+    def guiExceptHook(self, type, value, tb):
+        """
+        Exception hook for main program
+        """
+        self.displayError(type + value)

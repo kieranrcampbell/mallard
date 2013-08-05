@@ -8,6 +8,7 @@ kieran.renfrew.campbell@cern.ch
 """
 
 from setuptools import setup
+import py2exe
 
 mallard_version = 0.1
 
@@ -16,7 +17,7 @@ setup(name="mallard",
       description="DAQ for CRIS@ISOLDE",
       author="CERN",
       author_email="kieran.renfrew.campbell@cern.ch",
-      packages=['mallard'],
+      packages=['mallard', 'mallard.daq', 'mallard.core', 'mallard.gui'],
       zip_safe=False,
       install_requires=[
           'wx',

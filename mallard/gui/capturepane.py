@@ -10,7 +10,8 @@ kieran.renfrew.campbell@cern.ch
 import wx
 import matplotlib
 import numpy as np
-from pylab import *
+
+#from pylab import *
 
 matplotlib.interactive( True )
 
@@ -25,6 +26,8 @@ from mallard.core.sessionsettings import SessionSettings
 from mallard.core.capturesession import CaptureSession 
 from graphmanager import GraphManager
 from settingsdialog import SettingsDialog
+
+from mallard.core.exception import Error
 
 class CapturePane(wx.Panel):
     """ 
@@ -52,6 +55,8 @@ class CapturePane(wx.Panel):
         """
         Creates main panel
         """
+
+        raise Error("Exceptions are working")
 
         self.vbox = wx.BoxSizer(wx.VERTICAL)
 

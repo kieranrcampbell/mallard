@@ -40,7 +40,6 @@ class CaptureSession:
         # method displays error popup
         self.errorFnc = errorFnc
 
-        print "name: " + str(self.settings.name)
 
     def setName(self, name):
         """
@@ -92,9 +91,9 @@ class CaptureSession:
         q = Queue()
 
         # set up acquisition process and start
-        captureProcess = Process(target=acquire,
+        self.captureProcess = Process(target=acquire,
                                  args=(self.settings, q, ))
-        captureProcess.start()
+        self.captureProcess.start()
 
         # set up data capture process and start
         self.dAcqThread = Thread(target=self.dmanager.dataCallback, 
@@ -126,12 +125,12 @@ class CaptureSession:
         try:
             self.captureProcess.terminate()
         except:
-            errorFnc("Could not stop capture process")
+            self.errorFnc("Could not stop capture process")
 
         try:
             self.dAcqThread._Thread_stop()
         except:
-            errorFnc("Could not stop data manager thread")
+            self.errorFnc("Could not stop data manager thread")
 
     def isCapturing(self):
         """

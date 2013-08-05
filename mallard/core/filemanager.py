@@ -48,6 +48,7 @@ class FileManager:
 
     def writeCapture(self, rawCountData, rawAIData, integratedData):
         """
+        Saves the captures to the 3 files
         """
         filename = self.getName(self.settings.filename)
         filename = str(filename)
@@ -60,7 +61,7 @@ class FileManager:
 
         # integrated count
         f = filename + ".integrated.csv"
-        print "Saving to file: " + f
+
         np.savetxt(f, integratedData, delimiter=",",
                    header = h,
                    fmt = "%f,%i,%f")
@@ -69,7 +70,6 @@ class FileManager:
         # raw count
         f = filename + ".raw.counts.csv"
 
-        print "rawCOunt data shape: " + str(rawCountData.shape)
         np.savetxt(f, rawCountData, delimiter=",",
                    header = h)
 
