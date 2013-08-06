@@ -98,10 +98,16 @@ class MFrame(wx.Frame):
 
         # Graph menu
         graphMenu = wx.Menu()
-        showGraph = graphMenu.Append(wx.ID_ANY, "Show graph", "Show graph")
         clearGraph = graphMenu.Append(wx.ID_ANY, "Clear all", "Clear all")
 
         menubar.Append(graphMenu, '&Graph')
+
+        # Help menu
+        helpMenu = wx.Menu()
+        docMenu = helpMenu.Append(wx.ID_ANY, "Documentation", "Show documentation")
+        aboutMenu = helpMenu.Append(wx.ID_ANY, "About", "About")
+
+        menubar.Append(helpMenu, '&Help')
 
         # file events
         self.Bind(wx.EVT_MENU, self.onNew, fileNewCapture)
@@ -118,8 +124,11 @@ class MFrame(wx.Frame):
         self.Bind(wx.EVT_MENU, self.onKillCapture, captureKill)
 
         # graph events
-        self.Bind(wx.EVT_MENU, self.onShowGraph, showGraph)
         self.Bind(wx.EVT_MENU, self.onClearGraph, clearGraph)
+
+        # help events
+        self.Bind(wx.EVT_MENU, self.onDocumentation, docMenu)
+        self.Bind(wx.EVT_MENU, self.onAbout, aboutMenu)
 
     def createPanel(self):
         """
@@ -216,15 +225,6 @@ class MFrame(wx.Frame):
         if self.assertOpenCapture():
             self.notebook.getOpenTab().changeSettings()
 
-    def onShowGraph(self, event):
-        if self.assertOpenCapture():
-            if not self.notebook.getOpenSession().hasData:
-                wx.MessageBox('No open captures', 'Error',
-                              wx.OK | wx.ICON_INFORMATION)
-                return
-
-            self.notebook.getOpenSession().createGraphFromSession()
-
     def onClearGraph(self, event):
         self.notebook.getOpenSession().clearGraph()
 
@@ -251,6 +251,30 @@ class MFrame(wx.Frame):
             else:
                 wx.MessageBox('No capture in progress', 'Error',
                               wx.OK | wx.ICON_INFORMATION)
+
+    def onAbout(self, event):
+        """
+        When user clicks help -> about
+        """
+        description = "Data Acquisition for CRIS. Created as part of the \n cern summer student programme 2013."
+
+        info = wx.AboutDialogInfo()
+
+
+        info.SetName('Mallard for CRIS')
+        info.SetVersion('1.0')
+        info.SetDescription(description)
+        info.SetWebSite('http://kieranrcampbell.github.io/mallard/')
+        info.AddDeveloper('Kieran R Campbell')
+
+        wx.AboutBox(info)
+
+    def onDocumentation(self, event):
+        """
+        When user clicks help -> documentation
+        """
+        # os.filestart("doc.pdf")
+        
 
     def assertOpenCapture(self):
         """

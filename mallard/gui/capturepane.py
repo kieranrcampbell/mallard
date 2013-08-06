@@ -151,6 +151,16 @@ class CapturePane(wx.Panel):
         """
         Begin data capture
         """
+        if self.session.needsSaved:
+            msg = "Current capture data has not been saved. Do you want to continue with new capture and overwrite existing data?"
+
+            dlg = wx.MessageDialog(parent=None, message=msg, 
+                                   caption="Continue?", 
+                                   style=wx.YES_NO|wx.YES_DEFAULT|\
+                                   wx.ICON_EXCLAMATION)
+            if dlg.ShowModal() != wx.ID_YES:
+                return
+
         self.graphManager.clearPlot()
         self.session.startCapture()
 

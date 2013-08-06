@@ -32,7 +32,8 @@ class CaptureSession:
         self.fileManager = FileManager(self.settings)
         self.dmanager = DataManager(self.settings, statusCallback,
                                     errorFnc) 
-        self.hasData = False # no data currently loaded
+
+        self.needsSaved = False # captured data that needs saved
         
         # method that updates statusbar
         self.statusCallback = statusCallback
@@ -66,6 +67,7 @@ class CaptureSession:
         self.fileManager.writeCapture(self.dmanager.getRawCountData(),
                                       self.dmanager.getRawAIData(),
                                       self.dmanager.getCombinedData())
+        self.needsSaved = False
 
 
     def saveSessionAs(self, path):
@@ -100,7 +102,7 @@ class CaptureSession:
                                  args=(q,))
         self.dAcqThread.start()
 
-        self.hasData = True
+        self.needsSaved = True
 
     def registerGraphManager(self, graphManager):
         self.dmanager.registerGraphManager(graphManager)
@@ -119,7 +121,7 @@ class CaptureSession:
 
     def killCapture(self):
         """
-        Kills running capture. Program's behavious
+        Kills running capture. Program's behaviour
         may become undefined
         """
         try:
