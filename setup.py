@@ -8,9 +8,9 @@ kieran.renfrew.campbell@cern.ch
 """
 
 from setuptools import setup
-import py2exe
 
-mallard_version = 0.1
+
+mallard_version = 1.0
 
 setup(name="mallard",
       version=mallard_version,

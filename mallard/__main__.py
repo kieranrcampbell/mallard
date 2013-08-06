@@ -11,6 +11,8 @@ from mallard.gui.mframe import MFrame
 from mallard.core.exception import Error
 
 import sys
+# import wxversion
+# wxversion.select(wxversion.getInstalled()[0])
 
 import wx
 

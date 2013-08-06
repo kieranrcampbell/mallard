@@ -18,11 +18,11 @@
 #- Maybe run multiprocess spawn on separate thread?
 #- Create error reporting back to gui
 #- Fix naming on save 
+#- Add kill interface
+#- Package it up!
 
-
-- Add kill interface
 - Command line utility to integrate data?
-- Package it up!
+
 
 --- Write documentation (common errors)
 
