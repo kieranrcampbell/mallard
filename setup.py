@@ -20,7 +20,8 @@ setup(name="mallard",
       packages=['mallard', 'mallard.daq', 'mallard.core', 'mallard.gui'],
       zip_safe=False,
       install_requires=[
-          'wx',
+#          'wx', # import wx makes easy_install download some crappy
+          # version that breaks absolutely everything. install manually!
           'PyDAQmx',
           'numpy'
           ]

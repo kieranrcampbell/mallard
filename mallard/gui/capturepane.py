@@ -55,9 +55,6 @@ class CapturePane(wx.Panel):
         """
         Creates main panel
         """
-
-        raise Error("Exceptions are working")
-
         self.vbox = wx.BoxSizer(wx.VERTICAL)
 
         # upper (display) box
