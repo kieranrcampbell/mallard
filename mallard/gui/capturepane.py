@@ -23,7 +23,7 @@ from matplotlib.backends.backend_wxagg import \
 
 
 from mallard.core.settings import SessionSettings
-#from mallard.core.capturesession import CaptureSession 
+#from mallard.core.session import CaptureSession 
 from graphmanager import GraphManager
 from settingsdialog import SessionSettingsDialog
 

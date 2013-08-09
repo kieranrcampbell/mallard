@@ -197,7 +197,7 @@ class GlobalSettingsDialog(wx.Dialog):
 
         self.countBox.SetStringSelection(self.graphStyles[self.settings.countGraphStyle])
         self.voltBox.SetStringSelection(self.graphStyles[self.settings.voltGraphStyle])
-        self.meanBox.SetStringSelection(self.graphStyles[self.settings.meanStyle])
+        self.meanBox.SetStringSelection(self.meanStyles[self.settings.meanStyle])
         
         
         
