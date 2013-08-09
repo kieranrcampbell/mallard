@@ -9,7 +9,7 @@ kieran.renfrew.campbell@cern.ch
 """
 
 import numpy as np
-from sessionsettings import SessionSettings
+from settings import SessionSettings
 
 
 import os.path
@@ -92,11 +92,15 @@ class FileManager:
         """
         s = path.split(".csv")[0].split(".")
 
-        if s[-1] == "integrated":
-            return '.'.join(s[:-1])
+        print str(s)
 
-        elif s[-2] == "raw":
-            return '.'.join(s[:-2])
+        if len(s) > 1:
+            if s[-1] == "integrated":
+                return '.'.join(s[:-1])
+
+        if len(s) > 2:
+            if s[-2] == "raw":
+                return '.'.join(s[:-2])
 
         else:
             # file in wrong format, throw error

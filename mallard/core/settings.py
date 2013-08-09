@@ -11,6 +11,7 @@ Stores the settings for a given capture session.
 
 """
 
+
 class SessionSettings:
 
     def __init__(self):    
@@ -56,3 +57,28 @@ class SessionSettings:
         self.name = str(self.name)
         self.filename = str(self.filename)
         self.clockChannel = str(self.clockChannel)
+
+
+
+
+class GlobalSettings:
+    """
+    Represents the global application settings
+    """
+
+    def __init__(self):
+
+        # graph style constants
+        self._GRAPH_HIST = 0
+        self._GRAPH_LINE = 1
+        self._GRAPH_DOT = 2
+
+        # averaging
+        self._NORMALISED = 0 # mean displayed is the true mean
+        self._CUMULATIVE = 1 # mean displayed is cumulative
+
+
+        # the three global parameters
+        self.countGraphStyle = self._GRAPH_DOT
+        self.voltGraphStyle = self._GRAPH_DOT
+        self.meanStyle = self._NORMALISED

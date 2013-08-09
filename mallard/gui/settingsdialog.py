@@ -9,12 +9,14 @@ For changing settings
 """
 
 import wx
-from mallard.core import *
+from mallard.core.settings import GlobalSettings, SessionSettings
 
-class SettingsDialog(wx.Dialog):
+
+
+class SessionSettingsDialog(wx.Dialog):
 
     def __init__(self, *args, **kwargs):
-        super(SettingsDialog, self).__init__(*args, **kwargs)
+        super(SessionSettingsDialog, self).__init__(*args, **kwargs)
 
         self.SetTitle("Edit Settings")
         self.InitUI()
@@ -121,6 +123,90 @@ class SettingsDialog(wx.Dialog):
         self.settings.intervalsPerScan = self.txt4.GetValue()
         self.settings.scans = self.txt5.GetValue()
 
+        self.Destroy()
+
+    def onCancel(self, event):
+        self.Destroy()
+
+    def getSettings(self):
+        return self.settings
+
+
+class GlobalSettingsDialog(wx.Dialog):
+
+    def __init__(self, *args, **kwargs):
+        super(GlobalSettingsDialog, self).__init__(*args, **kwargs)
+
+        self.settings = GlobalSettings()
+        self.settings.countGraphStyle = self.settings._GRAPH_HIST
+
+        self.SetTitle("Preferences")
+        self.InitUI()
+        self.SetSize((300, 180))
+
+
+    def InitUI(self):
+        vbox = wx.BoxSizer(wx.VERTICAL)
+        gs = wx.GridSizer(3, 2, 5, 5)
+
+
+        # texts
+        label1 = wx.StaticText(self, label="Counter graph style: ",
+                               style = wx.ALIGN_LEFT | wx.ALL)
+        label2 = wx.StaticText(self, label="Voltage graph style: ",
+                               style = wx.ALIGN_LEFT | wx.ALL)
+        label3 = wx.StaticText(self, label="Averaging: ",
+                               style = wx.ALIGN_LEFT | wx.ALL)
+
+
+        # selection
+        self.graphStyles = ['Histogram', 'Line', 'Dot']
+        self.meanStyles = ['Normalised', 'Cumulative']
+
+        self.countBox = wx.ComboBox(self, choices=self.graphStyles)
+        self.voltBox = wx.ComboBox(self, choices=self.graphStyles)
+        self.meanBox = wx.ComboBox(self, choices=self.meanStyles)
+
+
+        # buttons
+        btnOk = wx.Button(self, label= "OK", size=(80,30))
+        btnCnl = wx.Button(self, label = "Cancel", size=(80,30))
+
+        btnOk.Bind(wx.EVT_BUTTON, self.onOk)
+        btnCnl.Bind(wx.EVT_BUTTON, self.onCancel)
+
+        gs.AddMany( [ (label1, 0, wx.ALIGN_LEFT),
+                      (self.countBox, 0, wx.ALIGN_RIGHT),
+                      (label2, 0, wx.ALIGN_LEFT),
+                      (self.voltBox, 0, wx.ALIGN_RIGHT),
+                      (label3, 0, wx.ALIGN_LEFT),
+                      (self.meanBox, 0, wx.ALIGN_RIGHT) ] )                
+
+        btnBox = wx.BoxSizer(wx.HORIZONTAL)
+        btnBox.Add(btnOk, 1, wx.ALL | wx.ALIGN_RIGHT)
+        btnBox.Add(btnCnl, 1, wx.ALL | wx.ALIGN_RIGHT)
+
+        vbox.Add(gs, border=10, flag=wx.EXPAND | wx.ALL)
+        vbox.Add(btnBox, border=10, flag= wx.ALL)
+
+        self.SetSizer(vbox)
+        vbox.Fit(self)
+
+    def setSettings(self, settings):
+        self.settings = settings
+
+        self.countBox.SetStringSelection(self.graphStyles[self.settings.countGraphStyle])
+        self.voltBox.SetStringSelection(self.graphStyles[self.settings.voltGraphStyle])
+        self.meanBox.SetStringSelection(self.graphStyles[self.settings.meanStyle])
+        
+        
+        
+
+    def onOk(self, event):
+        # do self settings here
+        self.settings.countGraphStyle = self.countBox.GetCurrentSelection() 
+        self.settings.voltGraphStyle = self.voltBox.GetCurrentSelection()
+        self.settings.meanStyle = self.meanBox.GetCurrentSelection()
         self.Destroy()
 
     def onCancel(self, event):

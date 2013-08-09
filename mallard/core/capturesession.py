@@ -13,7 +13,7 @@ kieran.renfrew.campbell@cern.ch
 
 from mallard.daq.acquire import acquire
 from datamanager import DataManager
-from sessionsettings import SessionSettings
+from settings import SessionSettings, GlobalSettings
 from filemanager import FileManager
 
 from threading import Thread
@@ -40,6 +40,8 @@ class CaptureSession:
         
         # method displays error popup
         self.errorFnc = errorFnc
+        
+        self.globalSettings = GlobalSettings()
 
 
     def setName(self, name):
@@ -139,3 +141,6 @@ class CaptureSession:
         Returns true if capturing is in progress
         """
         return self.captureProcess.is_alive()
+
+    def setGlobalSettings(self, settings):
+        self.globalSettings = settings

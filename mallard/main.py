@@ -8,7 +8,7 @@ kieran.renfrew.campbell@cern.ch
 """
 
 from mallard.gui.mframe import MFrame
-from mallard.core.exception import Error
+
 
 import sys
 # import wxversion
@@ -25,8 +25,6 @@ def start():
     app = wx.App()
     frame = MFrame(None, mtitle = title, msize = size)
     app.MainLoop()
-
-    sys.excepthook = frame.guiExceptHook
 
     
     

@@ -61,3 +61,13 @@ class CaptureNotebook(wx.Notebook):
         Returns last tab opened
         """
         return self.tabs[-1]
+
+
+    def setGlobalSettings(self, settings):
+        """
+        Sets the global settings on all
+        open captures
+        """
+
+        for tab in self.tabs:
+            tab.session.setGlobalSettings(settings)

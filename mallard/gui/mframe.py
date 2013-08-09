@@ -15,7 +15,9 @@ import pylab
 
 from capturepane import CapturePane
 from capturenotebook import CaptureNotebook
+from settingsdialog import GlobalSettingsDialog
 
+from mallard.core.settings import GlobalSettings
 
 
 class MFrame(wx.Frame):
@@ -49,6 +51,9 @@ class MFrame(wx.Frame):
 
         self.sb = self.CreateStatusBar()
 
+        self.globalSettings = GlobalSettings()
+        self.notebook.setGlobalSettings(self.globalSettings)
+
         self.Centre()
         self.Show()
 
@@ -71,10 +76,15 @@ class MFrame(wx.Frame):
         fileCloseCapture = fileMenu.Append(wx.ID_ANY, 'Close Capture',
                                            'Close current capture')
 
-        fileMenu.AppendSeparator()
+
         fileLoadSettings = fileMenu.Append(wx.ID_ANY, 
                                            'Load settings from existing capture',
                                            'Load settings into capture')
+        fileMenu.AppendSeparator()
+        filePreferences = fileMenu.Append(wx.ID_ANY,
+                                          "Preferences",
+                                          "Global Settings")
+
         fileMenu.AppendSeparator()
         
         fileQuitItem = fileMenu.Append(wx.ID_EXIT,
@@ -115,6 +125,7 @@ class MFrame(wx.Frame):
         self.Bind(wx.EVT_MENU, self.onSaveAs, fileSaveCaptureAs)
         self.Bind(wx.EVT_MENU, self.onClose, fileCloseCapture)
         self.Bind(wx.EVT_MENU, self.onLoadSettings, fileLoadSettings)
+        self.Bind(wx.EVT_MENU, self.onPreferences, filePreferences)
         self.Bind(wx.EVT_MENU, self.onQuit, fileQuitItem)
 
         # capture menu events
@@ -212,6 +223,16 @@ class MFrame(wx.Frame):
                 self.notebook.getLastTab().session.getName() )
 
 
+    def onPreferences(self, event):
+        """
+        User selects to edit global preferences
+        """
+        sdlg = GlobalSettingsDialog(None)
+        sdlg.setSettings(self.globalSettings)
+        sdlg.ShowModal()
+        self.globalSettings = sdlg.getSettings()
+        self.notebook.setGlobalSettings(self.globalSettings)
+        
     def onQuit(self, event):
         """
         Called to exit program
@@ -256,7 +277,7 @@ class MFrame(wx.Frame):
         """
         When user clicks help -> about
         """
-        description = "Data Acquisition for CRIS. Created as part of the \n cern summer student programme 2013."
+        description = "Data Acquisition for CRIS. Created as part of the \n Cern summer student programme 2013."
 
         info = wx.AboutDialogInfo()
 

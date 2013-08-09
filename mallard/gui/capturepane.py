@@ -22,12 +22,11 @@ from matplotlib.backends.backend_wxagg import \
     NavigationToolbar2WxAgg as NavigationToolbar
 
 
-from mallard.core.sessionsettings import SessionSettings
-from mallard.core.capturesession import CaptureSession 
+from mallard.core.settings import SessionSettings
+#from mallard.core.capturesession import CaptureSession 
 from graphmanager import GraphManager
-from settingsdialog import SettingsDialog
+from settingsdialog import SessionSettingsDialog
 
-from mallard.core.exception import Error
 
 class CapturePane(wx.Panel):
     """ 
@@ -171,7 +170,7 @@ class CapturePane(wx.Panel):
         Called to change settings in
         a particular tab
         """
-        sdlg = SettingsDialog(None)
+        sdlg = SessionSettingsDialog(None)
         sdlg.setTextFields(self.session.settings)
                         
         sdlg.ShowModal()
