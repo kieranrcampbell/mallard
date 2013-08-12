@@ -179,15 +179,9 @@ class GlobalSession:
 
         if os.path.exists(self.configFile):
 
-            print str(self.configFile)
-
             config = ConfigParser.ConfigParser()
             config.read(self.configFile)
             
-            f = open(self.configFile, 'r')
-            print str(f.read())
-
-            print "Sections: " + str(config.sections())
             self.globalSettings.countGraphStyle = \
                         int( config.get("mallard","countGraphStyle") )
             self.globalSettings.voltGraphStyle = \
@@ -212,8 +206,6 @@ class GlobalSession:
         config.set("mallard", "meanStyle",
                    self.globalSettings.meanStyle)
 
-        print "file: " + self.configFile
         f = open(self.configFile, 'w')
-        print "writing to " +  self.configFile
         config.write(f)
 

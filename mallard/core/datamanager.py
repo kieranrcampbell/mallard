@@ -110,6 +110,7 @@ class DataManager:
         self.graphManager = graphManager
         self.graphManager.globalSession = self.globalSession
 
+
     def getCombinedCounts(self, meanTo):
         """
         Returns a numpy array of the counts

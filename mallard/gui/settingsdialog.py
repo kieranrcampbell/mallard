@@ -160,12 +160,15 @@ class GlobalSettingsDialog(wx.Dialog):
 
 
         # selection
-        self.graphStyles = ['Histogram', 'Line', 'Dot']
+        self.graphStyles = ['Step (histogram)', 'Line', 'Point (with errors)']
         self.meanStyles = ['Normalised', 'Cumulative']
 
-        self.countBox = wx.ComboBox(self, choices=self.graphStyles)
-        self.voltBox = wx.ComboBox(self, choices=self.graphStyles)
-        self.meanBox = wx.ComboBox(self, choices=self.meanStyles)
+        self.countBox = wx.ComboBox(self, choices=self.graphStyles,
+                                    style=wx.CB_READONLY)
+        self.voltBox = wx.ComboBox(self, choices=self.graphStyles,
+                                   style=wx.CB_READONLY)
+        self.meanBox = wx.ComboBox(self, choices=self.meanStyles,
+                                   style=wx.CB_READONLY)
 
 
         # buttons
