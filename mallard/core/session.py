@@ -18,7 +18,7 @@ from filemanager import FileManager
 
 from threading import Thread
 from multiprocessing import Process, Queue
-
+import ConfigParser
 
 import wx
 
@@ -27,21 +27,21 @@ class CaptureSession:
     """
     Interfaces between card, gui and data buffers
     """    
-    def __init__(self, statusCallback, errorFnc):
+    def __init__(self, globalSession, errorFnc):
         self.settings = SessionSettings()
         self.fileManager = FileManager(self.settings)
-        self.dmanager = DataManager(self.settings, statusCallback,
+        self.dmanager = DataManager(self.settings, 
+                                    globalSession,
                                     errorFnc) 
 
         self.needsSaved = False # captured data that needs saved
         
         # method that updates statusbar
-        self.statusCallback = statusCallback
+        self.globalSession = globalSession
         
         # method displays error popup
         self.errorFnc = errorFnc
         
-        self.globalSettings = GlobalSettings()
 
 
     def setName(self, name):
@@ -88,7 +88,8 @@ class CaptureSession:
         self.settings.sanitise()
         
         # reinitialise data manager to do things like voltage calcs
-        self.dmanager.initialise(self.settings, self.statusCallback,
+        self.dmanager.initialise(self.settings, 
+                                 self.globalSession,
                                  self.errorFnc) 
 
         # queue for passing data between acquisition and dmanager
@@ -144,3 +145,75 @@ class CaptureSession:
 
     def setGlobalSettings(self, settings):
         self.globalSettings = settings
+
+
+class GlobalSession:
+    """
+    Mainly to deal with global settings
+    """
+    
+    def __init__(self):
+        import os
+        
+        self.configFile = os.path.join( os.path.expanduser("~"), 
+                                        "mallard.ini" )
+
+        self.globalSettings = GlobalSettings()
+        self.parseFromFile()
+
+        self.statusCallback = None
+
+
+    def setSettings(self, settings):
+        self.globalSettings = settings
+        self.saveToFile()
+
+    def getSettings(self):
+        return self.globalSettings
+
+    def parseFromFile(self):
+        """
+        reads in settings from user config file
+        """
+        import os
+
+        if os.path.exists(self.configFile):
+
+            print str(self.configFile)
+
+            config = ConfigParser.ConfigParser()
+            config.read(self.configFile)
+            
+            f = open(self.configFile, 'r')
+            print str(f.read())
+
+            print "Sections: " + str(config.sections())
+            self.globalSettings.countGraphStyle = \
+                        int( config.get("mallard","countGraphStyle") )
+            self.globalSettings.voltGraphStyle = \
+                        int( config.get("mallard","voltGraphStyle") )
+            self.globalSettings.meanStyle = \
+                        int( config.get("mallard","meanStyle") )
+        
+                                                         
+                                              
+
+    def saveToFile(self):
+        """
+        Saves current settings to user file
+        """
+        config = ConfigParser.ConfigParser()
+
+        config.add_section("mallard")
+        config.set("mallard", "countGraphStyle",
+                   self.globalSettings.countGraphStyle)
+        config.set("mallard", "voltGraphStyle",
+                   self.globalSettings.voltGraphStyle)
+        config.set("mallard", "meanStyle",
+                   self.globalSettings.meanStyle)
+
+        print "file: " + self.configFile
+        f = open(self.configFile, 'w')
+        print "writing to " +  self.configFile
+        config.write(f)
+

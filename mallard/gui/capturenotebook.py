@@ -24,13 +24,13 @@ class CaptureNotebook(wx.Notebook):
         self.tabs = [] # list of open tabs
         
 
-    def addTab(self, statusCallback):
+    def addTab(self, globalSession):
         """
         statusCallback is a function to provide
         some status to system - in this case
         the status bar
         """
-        tab = CapturePane(self, statusCallback)
+        tab = CapturePane(self, globalSession)
         self.AddPage(tab, tab.session.getName())
         self.SetSelection(self.GetPageCount() - 1)
 
@@ -62,12 +62,3 @@ class CaptureNotebook(wx.Notebook):
         """
         return self.tabs[-1]
 
-
-    def setGlobalSettings(self, settings):
-        """
-        Sets the global settings on all
-        open captures
-        """
-
-        for tab in self.tabs:
-            tab.session.setGlobalSettings(settings)

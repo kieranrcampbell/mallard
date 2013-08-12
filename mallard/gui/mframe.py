@@ -17,7 +17,7 @@ from capturepane import CapturePane
 from capturenotebook import CaptureNotebook
 from settingsdialog import GlobalSettingsDialog
 
-from mallard.core.settings import GlobalSettings
+from mallard.core.session import GlobalSession
 
 
 class MFrame(wx.Frame):
@@ -39,6 +39,9 @@ class MFrame(wx.Frame):
         self.panel = None
         self.notebook = None
 
+        self.globalSession = GlobalSession()
+        self.globalSession.statusCallback = self.setSBText
+
         self.InitUI()
 
 
@@ -51,8 +54,6 @@ class MFrame(wx.Frame):
 
         self.sb = self.CreateStatusBar()
 
-        self.globalSettings = GlobalSettings()
-        self.notebook.setGlobalSettings(self.globalSettings)
 
         self.Centre()
         self.Show()
@@ -158,7 +159,7 @@ class MFrame(wx.Frame):
         """
         User has indicated new capture
         """
-        self.notebook.addTab(self.setSBText)
+        self.notebook.addTab(self.globalSession)
 
     def onSave(self, event):
         """
@@ -228,10 +229,10 @@ class MFrame(wx.Frame):
         User selects to edit global preferences
         """
         sdlg = GlobalSettingsDialog(None)
-        sdlg.setSettings(self.globalSettings)
+        sdlg.setSettings(self.globalSession.getSettings())
         sdlg.ShowModal()
-        self.globalSettings = sdlg.getSettings()
-        self.notebook.setGlobalSettings(self.globalSettings)
+        self.globalSession.setSettings(sdlg.getSettings())
+
         
     def onQuit(self, event):
         """

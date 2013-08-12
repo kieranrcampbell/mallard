@@ -17,10 +17,10 @@ from multiprocessing import Queue
 
 class DataManager:
     
-    def __init__(self, settings, statusCallback, errorFnc):
-        self.initialise(settings, statusCallback, errorFnc)
+    def __init__(self, settings, globalSession, errorFnc):
+        self.initialise(settings, globalSession, errorFnc)
 
-    def initialise(self, settings, statusCallback, errorFnc):
+    def initialise(self, settings, globalSession, errorFnc):
         """
         Need to restart the datamanager, but can't
         create a new object due to memory position
@@ -30,8 +30,8 @@ class DataManager:
         """
         self.settings = settings
 
-        # callback function for statusbar and errors
-        self.statusCallback = statusCallback
+        # global session and errors
+        self.globalSession = globalSession
         self.errorFnc = errorFnc
 
         # raw analog input data for all measurements
@@ -91,7 +91,7 @@ class DataManager:
                         str(self.settings.scans) + "\t Voltage: " + \
                         str(self.voltsPerInterval * interval) + " V"
 
-                    self.statusCallback(s)
+                    self.globalSession.statusCallback(s)
 
                     counts = self.getCombinedCounts(scan)
                     ai = self.getCombinedAI(scan)
@@ -108,6 +108,7 @@ class DataManager:
         updating of the graphs
         """
         self.graphManager = graphManager
+        self.graphManager.globalSession = self.globalSession
 
     def getCombinedCounts(self, meanTo):
         """

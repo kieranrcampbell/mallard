@@ -9,14 +9,14 @@ kieran.renfrew.campbell@cern.ch
 
 from pylab import *
 
+from mallard.core.session import GlobalSession
+
 class GraphManager:
     """
     Handles graph on a given CapturePane
     Note (as with all gui modules) this is essentially
     dumb, it is up to DataManager to tell GraphManager
     what to plot and when
-
-    TODO: way too much stuff named 'plot' in this
     """
 
     def __init__(self, countSubplot, aiSubplot, canvas):
@@ -27,6 +27,14 @@ class GraphManager:
         self.countSubplot = countSubplot
         self.aiSubplot = aiSubplot
         self.canvas = canvas
+
+        # in case the initialisation from datamanager fails
+        self.globalSession = GlobalSession() 
+
+        # the line style parameters
+        self.countLineStyle = None
+        self.voltLineStyle = None
+        
 
     def plot(self, voltage, counts, ai, oldCounts, oldAi ):
         """
@@ -45,7 +53,9 @@ class GraphManager:
 
         self.canvas.draw()
 
-
+    def calcLineStyles(self):
+        settings = self.globalSession.getSettings()
+    
         
     def clearPlot(self):
         self.countSubplot.clear()

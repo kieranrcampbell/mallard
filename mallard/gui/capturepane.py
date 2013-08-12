@@ -23,7 +23,7 @@ from matplotlib.backends.backend_wxagg import \
 
 
 from mallard.core.settings import SessionSettings
-#from mallard.core.session import CaptureSession 
+from mallard.core.session import CaptureSession 
 from graphmanager import GraphManager
 from settingsdialog import SessionSettingsDialog
 
@@ -32,12 +32,12 @@ class CapturePane(wx.Panel):
     """ 
     Represents an individual tab in CaptureNotebook
     """
-    def __init__(self, parent, statusCallback):
+    def __init__(self, parent, globalSession):
         wx.Panel.__init__(self, parent = parent,
                           id = wx.ID_ANY)
 
         # main session that does all analysis
-        self.session = CaptureSession(statusCallback, self.displayError)
+        self.session = CaptureSession(globalSession, self.displayError)
         self.countSubplot = None
         self.aiSubplot = None
 

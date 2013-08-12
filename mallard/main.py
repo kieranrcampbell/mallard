@@ -22,7 +22,7 @@ def start():
     title = "Mallard - Data Acquisition for CRIS"
 
 
-    app = wx.App()
+    app = wx.App()#redirect=False)
     frame = MFrame(None, mtitle = title, msize = size)
     app.MainLoop()
 
