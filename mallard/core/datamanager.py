@@ -32,6 +32,7 @@ class DataManager:
 
         # global session and errors
         self.globalSession = globalSession
+        self.globalSettings = self.globalSession.getSettings()
         self.errorFnc = errorFnc
 
         # raw analog input data for all measurements
@@ -67,11 +68,18 @@ class DataManager:
         """
         
         counts = ai = np.zeros((self.settings.intervalsPerScan,))
+        scale = 1
 
         for i in range(self.settings.scans):
 
-            oldCounts = counts
-            oldAi = ai
+            oldCounts = counts * scale
+            oldAi = ai * scale
+
+            # need to rescale up previous measure
+            # defined after first to avoid /0
+            if self.globalSettings.meanStyle == \
+               self.globalSettings._CUMULATIVE:
+                scale = (i+2) / float((i+1))
 
             for j in range(self.settings.intervalsPerScan):
 
@@ -118,14 +126,22 @@ class DataManager:
         Sometimes we only want to mean the first meanTo columns
         for displaying on the graph
         """
-        return np.mean(self.rawCountData[:meanTo+1], axis=0)
+        if self.globalSettings.meanStyle == \
+           self.globalSettings._NORMALISED:
+            return np.mean(self.rawCountData[:meanTo+1], axis=0)
+        else:
+            return np.sum(self.rawCountData[:meanTo+1], axis=0)
 
     def getCombinedAI(self, meanTo):
         """
         Returns a numpy array of the AI readings
         averaged over each scan
         """
-        return np.mean(self.rawAIData[:meanTo+1], axis=0)
+        if self.globalSettings.meanStyle == \
+           self.globalSettings._NORMALISED:
+            return np.mean(self.rawAIData[:meanTo+1], axis=0)
+        else:
+            return np.sum(self.rawAIData[:meanTo+1], axis=0)
 
     def getVoltageArray(self):
         """
