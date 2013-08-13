@@ -222,6 +222,22 @@ to combine both of these, and so came Mallard: Multi Analog LossLess Acquistion 
 <h3>
 <a name="troubleshooting" class="anchor" href="#troubleshooting"><span class="octicon octicon-link"></span></a>Troubleshooting</h3>
 
+<h4>
+<a name="mallard-errors" class="anchor" href="#mallard-errors"><span class="octicon octicon-link"></span></a>Mallard errors</h4>
+
+<h6>
+<a name="importerror-matplotlib-backend_wx-and-backend_wxagg-require-wxversion-which-was-not-found" class="anchor" href="#importerror-matplotlib-backend_wx-and-backend_wxagg-require-wxversion-which-was-not-found"><span class="octicon octicon-link"></span></a>ImportError: Matplotlib backend_wx and backend_wxagg require wxversion, which was not found.</h6>
+
+<p>Sometimes the wxversion module is missing. Download it from <a href="http://svn.wxwidgets.org/viewvc/wx/wxPython/trunk/wxversion/wxversion.py?view=co">http://svn.wxwidgets.org/viewvc/wx/wxPython/trunk/wxversion/wxversion.py?view=co</a> and install in your <code>site-packages</code> directory (for Anaconda this is usually <code>C:/Anaconda/lib/site-packages</code>).</p>
+
+<h4>
+<a name="nidaqmx-errors" class="anchor" href="#nidaqmx-errors"><span class="octicon octicon-link"></span></a>NIDAQmx Errors</h4>
+
+<h5>
+<a name="the-specified-resource-is-reserved-the-operation-could-not-be-completed-as-specified" class="anchor" href="#the-specified-resource-is-reserved-the-operation-could-not-be-completed-as-specified"><span class="octicon octicon-link"></span></a>The specified resource is reserved. The operation could not be completed as specified.</h5>
+
+<p>This means a task is still running on the device. To end the task and recover, open the NIDAQmx utility from Start -&gt; National Instruments -&gt; NiMAX. Select Devices and Interfaces -&gt; NI USB 6211 then select 'Reset Device', and await confirmation.</p>
+
 <h3>
 <a name="authors" class="anchor" href="#authors"><span class="octicon octicon-link"></span></a>Authors</h3>
 
