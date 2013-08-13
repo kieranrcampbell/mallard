@@ -58,10 +58,18 @@ class GraphManager:
             self.countSubplot.step(voltage[:len(counts)], counts,'r',
                                    voltage, oldCounts, 'k')
         else:
-            self.countSubplot.plot(voltage[:len(counts)], counts, 
-                                   'r' + self.countLineStyle, 
-                                   voltage, oldCounts, 
-                                   'k' + self.countLineStyle)
+            if self.countLineStyle == 'o':
+                self.countSubplot.errorbar(voltage[:len(counts)], counts,
+                                           yerr=np.sqrt(counts),
+                                           fmt='r' + self.countLineStyle) 
+                self.countSubplot.errorbar(voltage, oldCounts,
+                                           yerr=np.sqrt(oldCounts),
+                                           fmt='k' + self.countLineStyle)
+            else:
+                self.countSubplot.plot(voltage[:len(counts)], counts, 
+                                       'r' + self.countLineStyle, 
+                                       voltage, oldCounts, 
+                                       'k' + self.countLineStyle)
 
         if self.voltLineStyle == 'hist':
             self.aiSubplot.step(voltage[:len(ai)], ai,'r',

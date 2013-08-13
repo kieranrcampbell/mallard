@@ -75,7 +75,7 @@ class GlobalSettings:
 
         # averaging
         self._NORMALISED = 0 # mean displayed is the true mean
-        self._CUMULATIVE = 1 # mean displayed is cumulative
+        self._CUMULATIVE = 1 # 'mean' displayed is cumulative
 
 
         # the three global parameters

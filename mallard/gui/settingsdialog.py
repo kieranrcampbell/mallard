@@ -160,7 +160,7 @@ class GlobalSettingsDialog(wx.Dialog):
 
 
         # selection
-        self.graphStyles = ['Step (histogram)', 'Line', 'Point (with errors)']
+        self.graphStyles = ['Step (histogram)', 'Line', 'Point']
         self.meanStyles = ['Normalised', 'Cumulative']
 
         self.countBox = wx.ComboBox(self, choices=self.graphStyles,
