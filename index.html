@@ -41,17 +41,47 @@
 <a name="contents" class="anchor" href="#contents"><span class="octicon octicon-link"></span></a>Contents</h3>
 
 <ul>
+<li><a href="#resources">Online Resources</a></li>
+<li><a href="#introduction">Introduction</a></li>
 <li><a href="#installation">Installation</a></li>
-<li><a href="#operation">Operation</a></li>
+<li><a href="#use">Use</a></li>
 <li><a href="#development">Development</a></li>
+<li><a href="#troubleshooting">Troubleshooting</a></li>
 <li><a href="#authors">Authors</a></li>
 </ul><h3>
+<a name="resources" class="anchor" href="#resources"><span class="octicon octicon-link"></span></a>Resources</h3>
+
+<p>Github Repository: <a href="https://github.com/kieranrcampbell/mallard">https://github.com/kieranrcampbell/mallard</a></p>
+
+<p>Documentation: <a href="http://kieranrcampbell.github.io/mallard/">http://kieranrcampbell.github.io/mallard/</a></p>
+
+<p>Sourceforge page: <a href="https://sourceforge.net/projects/mallardforcris/">https://sourceforge.net/projects/mallardforcris/</a></p>
+
+<h3>
+<a name="introduction" class="anchor" href="#introduction"><span class="octicon octicon-link"></span></a>Introduction</h3>
+
+<h4>
+<a name="etymology" class="anchor" href="#etymology"><span class="octicon octicon-link"></span></a>Etymology</h4>
+
+<p>Two things frequently occur at CERN: everything is an acronym (CERN, LHC, ATLAS, ALICE,
+ISOLDE, CRIS, ...), and the DAQ/duck joke is made (a yellow rubber duck sits on the data acquisition
+desk in the ATLAS control room). The obvious challenge then for any self respecting summer student is
+to combine both of these, and so came Mallard: Multi Analog LossLess Acquistion of Resonance Data</p>
+
+<h4>
+<a name="purpose" class="anchor" href="#purpose"><span class="octicon octicon-link"></span></a>Purpose</h4>
+
+<p>Mallard is designed for efficient data acquisition and experimental control on the CRIS experiment at ISOLDE at CERN. The software interfaces a National Instruments USB-6211 card that connects to the lasers, counters and trigger. The experiment requires the software  to scan across a range of voltages set on an analogue output, and at each voltage measure counts (from the MCP) and an analogue input (relative intensity of the laser). The user selects the voltage range across which to scan, how many volts should be set in a given interval, and how many scans across the full voltage range should be performed. The timing of the voltage change comes from an external trigger that is also connected to the scanning laser.</p>
+
+<p>During the data acquisition the software continuously graphs the current count rate and analogue input voltage measured, as well as the average so far in order to provide the user with an idea of whether the measurements are drifting from normal. The raw data of counts and analogue input measurements is collected and saved to disk, as well as an integrated file showing the measurements at each voltage averaged over a number of scans.</p>
+
+<h3>
 <a name="installation" class="anchor" href="#installation"><span class="octicon octicon-link"></span></a>Installation</h3>
 
 <p>Mallard is written in python and so requires a python distribution such as <a href="https://store.continuum.io/">Anaconda</a>.</p>
 
-<h5>
-<a name="dependences" class="anchor" href="#dependences"><span class="octicon octicon-link"></span></a>Dependences</h5>
+<h4>
+<a name="dependencies" class="anchor" href="#dependencies"><span class="octicon octicon-link"></span></a>Dependencies</h4>
 
 <p>Mallard has the following dependencies:</p>
 
@@ -60,15 +90,57 @@
 <li>
 <a href="http://www.scipy.org/">SciPy</a> (on windows we use <a href="https://store.continuum.io/">Anaconda</a> )</li>
 <li><a href="http://pythonhosted.org/PyDAQmx/">PyDAQmx</a></li>
-</ul><p>Mallard also uses <a href="http://www.ni.com/dataacquisition/nidaqmx.htm">NI-DAQmx</a> from National Instruments to interface the <strong>USB-6211</strong> card.</p>
+</ul><p>Installing SciPy on Windows can be tedious, so use <a href="https://store.continuum.io/">Anaconda</a> which comes with it pre-installed. Don't install wxPython using <code>easy_install</code> or <code>pip</code> as these install some bizarre empty package. Instead, download the windows installer directly from their website (see above).</p>
+
+<h4>
+<a name="nidaqmx" class="anchor" href="#nidaqmx"><span class="octicon octicon-link"></span></a>NIDAQmx</h4>
+
+<p><a href="http://www.ni.com/dataacquisition/nidaqmx">NIDAQmx</a> from National Instruments provides the base set of drivers to interface the card. The full set of functionality is only available on Windows. At time of writing the latest version was 9.7 which can be downloaded from <a href="http://joule.ni.com/nidu/cds/view/p/id/3811/lang/en">http://joule.ni.com/nidu/cds/view/p/id/3811/lang/en</a>. NIDAQmx installs a header file containing all the C library function definitions. The location of this file must be noted and an installation file in PyDAQmx modified accordingly (see PyDAQmx documentation for details).</p>
+
+<h4>
+<a name="mallard" class="anchor" href="#mallard"><span class="octicon octicon-link"></span></a>Mallard</h4>
 
 <h5>
-<a name="setup" class="anchor" href="#setup"><span class="octicon octicon-link"></span></a>Setup</h5>
+<a name="from-source" class="anchor" href="#from-source"><span class="octicon octicon-link"></span></a>From source</h5>
+
+<p>The source code can be downloaded (as zip or tar.gz) from the <a href="https://github.com/kieranrcampbell/mallard">github repository</a>. Extract it to a convenient folder then, from the top level <code>mallard</code> directory it can be installed by <code>python setup.py install</code>. Then mallard can be launched in the usual way, or if you prefer to use it within a python script itself it can be called using <code>import mallard</code> etc.</p>
+
+<h5>
+<a name="windows-installer" class="anchor" href="#windows-installer"><span class="octicon octicon-link"></span></a>Windows installer</h5>
+
+<p>A windows installer for the python package can be downloaded from the <a href="https://sourceforge.net/projects/mallardforcris/">sourceforge page</a> which will install it as a python package.</p>
+
+<h5>
+<a name="system-requirements" class="anchor" href="#system-requirements"><span class="octicon octicon-link"></span></a>System requirements</h5>
+
+<p>Due to the availability of NI-DAQmx Mallard only runs on windows. Despite all data being held in RAM, during system tests it was found that 500 scans with 50 intervals per scan only takes up about 150MB, so this is certainly not a limiting factor.</p>
 
 <h3>
-<a name="operation" class="anchor" href="#operation"><span class="octicon octicon-link"></span></a>Operation</h3>
+<a name="use" class="anchor" href="#use"><span class="octicon octicon-link"></span></a>Use</h3>
 
-<p>Mallard sets the voltage of the laser, scanning across a given range multiple times, while counting events from the MCP and reading voltages from an analog input corresponding to the current laser intensity. It graphs the counts and analog input voltage against a given output voltage, averages over the scans and saves to file.</p>
+<h4>
+<a name="basic-capture" class="anchor" href="#basic-capture"><span class="octicon octicon-link"></span></a>Basic Capture</h4>
+
+<p>To begin Mallard, navigate to the root mallard folder, and start by</p>
+
+<pre><code>python -m mallard.main
+</code></pre>
+
+<p>Due to a multiprocessing bug under python on windows we can't have the usual <strong>main</strong>.py folder to begin the module as <code>python mallard</code>.</p>
+
+<p>Each acquisition session of data corresponding to a particular set of settings is known as a capture. Each capture is represented by a tab in the GUI, and a new capture can be opened by File -&gt; New Capture. Captures can be saved (see below), but cannot be reloaded into Mallard as there is currently no data analysis functionality. However, the settings for a new capture can be loaded from an old capture by File -&gt; Load Capture then selecting the capture you wish to open.</p>
+
+<p>The capture begins by pressing 'Start Capture', and can be stopped by selecting Capture -&gt; Kill Capture. The current voltage and MCP count is displayed on the screen, as well as the scan average superimposed on the graph. The graph can be saved at any time using the Matplotlib functionality on screen. </p>
+
+<p>The graph style can be changed at any time by going to File -&gt; Preferences. The graph style can be set separately for the count graph and for the voltage graph. There are three different types:</p>
+
+<ul>
+<li>Step (histogram): Essentially bins the data exactly like a histogram</li>
+<li>Line: joins consecutive data points using lines</li>
+<li>Points: Each data point is represented by a separate point. For the count graph this has error bars, which are given by root(N) for N counts.</li>
+</ul><p>In these preferences you can also set the style of the 'mean'. Selecting 'normalised' graphs each count divided by the number of scans, whereas 'cumulative' gives the sum of all counts across all scans. </p>
+
+<p>Plots can be saved using the controls on the plot itself. To move the plot around, select the 'Pan' symbol and drag with the left mouse click. To zoom in and out, both horizontally and vertically, select the 'Pan' symbol and drag with the right mouse button.</p>
 
 <h5>
 <a name="key-concepts" class="anchor" href="#key-concepts"><span class="octicon octicon-link"></span></a>Key Concepts</h5>
@@ -132,6 +204,9 @@
 <li>
 <code>mallard.test</code> - all the small scripts created along the way, in case they come in handy at a later point</li>
 </ul><h3>
+<a name="troubeshooting" class="anchor" href="#troubeshooting"><span class="octicon octicon-link"></span></a>Troubeshooting</h3>
+
+<h3>
 <a name="authors" class="anchor" href="#authors"><span class="octicon octicon-link"></span></a>Authors</h3>
 
 <p>Originally written by Kieran Campbell (<a href="https://github.com/kieranrcampbell" class="user-mention">@kieranrcampbell</a>) as part of the CERN summer student program.</p>
