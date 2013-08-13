@@ -192,19 +192,35 @@ to combine both of these, and so came Mallard: Multi Analog LossLess Acquistion 
 <h3>
 <a name="development" class="anchor" href="#development"><span class="octicon octicon-link"></span></a>Development</h3>
 
-<p>The mallard package uses several sub-packages:</p>
+<p>Mallard is written in python and is under git source control.</p>
 
-<ul>
-<li>
-<code>mallard.core</code> - base functionality for the package including data and file handling, as well as managing a general capture session including settings</li>
-<li>
-<code>mallard.daq</code> - interfaces to the USB-6211 card. If the card needs changed in future then only this module needs rewritten</li>
-<li>
-<code>mallard.gui</code> - provides the user interface using wxPython</li>
-<li>
-<code>mallard.test</code> - all the small scripts created along the way, in case they come in handy at a later point</li>
-</ul><h3>
-<a name="troubeshooting" class="anchor" href="#troubeshooting"><span class="octicon octicon-link"></span></a>Troubeshooting</h3>
+<h4>
+<a name="package-layout" class="anchor" href="#package-layout"><span class="octicon octicon-link"></span></a>Package Layout</h4>
+
+<p>The mallard package is organised into several sub-packages:</p>
+
+<h5>
+<a name="mallardcore" class="anchor" href="#mallardcore"><span class="octicon octicon-link"></span></a>mallard.core</h5>
+
+<p>This provides base functionality for the package including data and file handling. <code>CaptureSession</code> represents an abstract (ie has no attached daq interface or gui), and manages calls for file management and data acquisition. <code>SessionSettings</code> represents the settings for a given capture session, including input, output and counter channels. <code>CaptureSession</code> holds the 'master' copy, though since everything in python is a pointer all copies (held by all <code>mallard.core</code> modules). However, after settings are changed some things must be recalculated (such as voltage intervals), so if a module uses <code>SessionSettings</code> it's not okay to assume changes elsewhere will be safely reflected in the current location. <code>DataManager</code> holds runtime data and has the <code>queue.get()</code> method to receive data from the interface. It also calculates the averages across scans, and calls the <code>GraphManager</code> (which provides the interface between <code>mallard.core</code> and the gui package). <code>FileManager</code> deals with file input and output. It can generate the header from <code>SessionSettings</code> and can read in and parse settings and filenames.</p>
+
+<h5>
+<a name="mallarddaq" class="anchor" href="#mallarddaq"><span class="octicon octicon-link"></span></a>mallard.daq</h5>
+
+<p>This contains only one module called <code>Acquire</code> that interfaces the USB-6211 card. If the card needs changed in future then only this module needs rewritten. It is the only module in the entire package that is just a function, as spawning processes that are class methods using the <code>multiprocessing</code> module is very difficult (maybe impossible?). All this module needs are the session settings (for channel names and rates) and a <code>multiprocessing.Queue</code> to report the data back to <code>DataManager</code>.</p>
+
+<h5>
+<a name="mallardgui" class="anchor" href="#mallardgui"><span class="octicon octicon-link"></span></a>mallard.gui</h5>
+
+<p>This provides the graphical user interface using wxPython. <code>MFrame</code> is the base <code>wx.Frame</code> used, which owns a <code>CaptureNotebook</code>. This <code>CaptureNotebook</code> holds <code>CapturePane</code>s, each of which corresponds to a <code>CaptureSession</code>. The <code>GraphManager</code> provides a link between the <code>DataManager</code> and the gui, updating the graph on screen with the data coming in. <code>SettingsDialog</code> simply displays a dialog that lets the user change all the different settings.</p>
+
+<h5>
+<a name="mallardtest" class="anchor" href="#mallardtest"><span class="octicon octicon-link"></span></a>mallard.test</h5>
+
+<p>Holds all the obsolete and test scripts created along the way, in case they come in handy at a later point. May be changed to `old' in future. </p>
+
+<h3>
+<a name="troubleshooting" class="anchor" href="#troubleshooting"><span class="octicon octicon-link"></span></a>Troubleshooting</h3>
 
 <h3>
 <a name="authors" class="anchor" href="#authors"><span class="octicon octicon-link"></span></a>Authors</h3>
