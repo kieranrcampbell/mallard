@@ -92,8 +92,6 @@ class FileManager:
         """
         s = path.split(".csv")[0].split(".")
 
-        print str(s)
-
         if len(s) > 1:
             if s[-1] == "integrated":
                 return '.'.join(s[:-1])
@@ -128,3 +126,16 @@ class FileManager:
 
         s.sanitise()
         return s
+
+
+    def readData(self, path):
+        """
+        Reads data and returns as
+        (voltage, counts, ai)
+        """
+        name = self.getName(path)
+        intFileName = name + ".integrated.csv"
+        data = np.loadtxt(intFileName, delimiter=',')
+        
+        # see doc for explanation
+        return (data.T[0], data.T[1], data.T[2])

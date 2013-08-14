@@ -160,6 +160,12 @@ class CapturePane(wx.Panel):
             if dlg.ShowModal() != wx.ID_YES:
                 return
 
+        if self.session.readOnly:
+            msg = 'This session was loaded from file and is read-only to prevent corruption of existing data. Please open a new session to begin capturing'
+            wx.MessageBox(msg, 'Error', 
+                          wx.OK | wx.ICON_ERROR)
+            return
+
         self.graphManager.clearPlot()
         self.session.startCapture()
 
@@ -184,12 +190,14 @@ class CapturePane(wx.Panel):
         from a file
         """
         self.loadSettingsFromFile(path)
+        self.session.dmanager.loadDataFromFile(path,
+                                               self.session.fileManager)
 
     def loadSettingsFromFile(self, path):
         """
         Loads just the settings from file
         """
-        self.session.loadSession(path)
+        self.session.loadSettings(path)
         self.setSettings()
 
 

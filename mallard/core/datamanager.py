@@ -173,3 +173,16 @@ class DataManager:
         self.rawAIData = ai
 
 
+    def loadDataFromFile(self, path, fmanager):
+        """
+        Loads data from existing file
+        """
+        (volts, counts, ai) = fmanager.readData(path)
+
+        # we don't actually hold any data in memory, so
+        # just graph it
+        self.graphManager.plot(volts, counts, ai,
+                               counts, ai)
+
+
+        

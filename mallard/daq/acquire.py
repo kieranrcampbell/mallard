@@ -100,8 +100,6 @@ def acquire(settings, queue):
                                       True, timeout,
                                       aoVoltage, None)
 
-            # callbackFunc(i, j, countData.value - lastCount.value,
-            #                   aiData.value)
             c = countData.value - lastCount.value
             queue.put( (i, j, c, aiData.value) )
 

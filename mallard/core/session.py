@@ -41,7 +41,11 @@ class CaptureSession:
         
         # method displays error popup
         self.errorFnc = errorFnc
-        
+
+        # if we load in a session from file, we don't want to
+        # wipe it over in a new capture, so we set the
+        # read only flag to true
+        self.readOnly = False 
 
 
     def setName(self, name):

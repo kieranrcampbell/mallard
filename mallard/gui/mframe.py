@@ -71,15 +71,18 @@ class MFrame(wx.Frame):
                                          "New Capture")
         fileSaveCapture = fileMenu.Append(wx.ID_SAVE, "Save Capture",
                                           "Save Capture")
-        fileSaveCaptureAs = fileMenu.Append(wx.ID_SAVE, "Save Capture As...",
-                                          "Save Capture As")
+        fileSaveCaptureAs = fileMenu.Append(wx.ID_SAVE, 
+                                            "Save Capture As...",
+                                            "Save Capture As")
 
         fileCloseCapture = fileMenu.Append(wx.ID_ANY, 'Close Capture',
                                            'Close current capture')
 
-
+        fileLoadData = fileMenu.Append(wx.ID_ANY, 
+                                       'Load Data',
+                                       'Display existing data')
         fileLoadSettings = fileMenu.Append(wx.ID_ANY, 
-                                           'Load settings from existing capture',
+                                           'Load Settings from Existing Capture',
                                            'Load settings into capture')
         fileMenu.AppendSeparator()
         filePreferences = fileMenu.Append(wx.ID_ANY,
@@ -102,7 +105,7 @@ class MFrame(wx.Frame):
                                          "Kill Running Capture")
         menubar.Append(captureMenu, '&Capture')
 
-        changeName = captureMenu.Append(wx.ID_ANY, "Rename session",
+        changeName = captureMenu.Append(wx.ID_ANY, "Rename Session",
                                         "Rename current session")
 
         self.SetMenuBar(menubar)
@@ -125,6 +128,7 @@ class MFrame(wx.Frame):
         self.Bind(wx.EVT_MENU, self.onSave, fileSaveCapture)
         self.Bind(wx.EVT_MENU, self.onSaveAs, fileSaveCaptureAs)
         self.Bind(wx.EVT_MENU, self.onClose, fileCloseCapture)
+        self.Bind(wx.EVT_MENU, self.onLoadData, fileLoadData)
         self.Bind(wx.EVT_MENU, self.onLoadSettings, fileLoadSettings)
         self.Bind(wx.EVT_MENU, self.onPreferences, filePreferences)
         self.Bind(wx.EVT_MENU, self.onQuit, fileQuitItem)
@@ -216,13 +220,31 @@ class MFrame(wx.Frame):
         if openFileDialog.ShowModal() == wx.ID_OK:
             path = openFileDialog.GetPath()
 
-            self.notebook.addTab("")
+            self.notebook.addTab(self.globalSession)
             self.notebook.getLastTab().loadSettingsFromFile(path)
 
             self.notebook.SetPageText(
                 self.notebook.GetSelection(), 
                 self.notebook.getLastTab().session.getName() )
 
+
+    def onLoadData(self, event):
+        """
+        Displays existing data from capture
+        """
+        openFileDialog = wx.FileDialog(self, "Open", "", "", 
+                                       "CSV files (*.csv)|*.csv",
+                                       wx.FD_OPEN)
+        if openFileDialog.ShowModal() == wx.ID_OK:
+            path = openFileDialog.GetPath()
+
+            self.notebook.addTab(self.globalSession)
+            self.notebook.getLastTab().loadSessionFromFile(path)
+
+            self.notebook.SetPageText(
+                self.notebook.GetSelection(), 
+                self.notebook.getLastTab().session.getName() )
+            self.notebook.getLastTab().session.readOnly = True
 
     def onPreferences(self, event):
         """
