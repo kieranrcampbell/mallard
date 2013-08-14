@@ -181,7 +181,7 @@ to combine both of these, and so came Mallard: Multi Analog LossLess Acquistion 
 <p>Mallard doesn't yet have any in built analysis, but with the data in this format it should be easy enough. The data can be opened directly in excel, or using numpy in python as follows:</p>
 
 <div class="highlight"><pre><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
-<span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="s">'mycapture.integrated.csv'</span><span class="p">)</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="s">'mycapture.integrated.csv'</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s">','</span><span class="p">)</span>
 <span class="n">voltage_intervals</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">T</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="c"># need to transpose matrix</span>
 <span class="n">counts</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">T</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
 <span class="n">ai_readings</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">T</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
