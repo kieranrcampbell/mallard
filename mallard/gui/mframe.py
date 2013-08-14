@@ -317,7 +317,8 @@ class MFrame(wx.Frame):
         """
         When user clicks help -> documentation
         """
-        # os.filestart("doc.pdf")
+        import os
+        os.startfile(os.path.join('doc','report.pdf'))
         
 
     def assertOpenCapture(self):
