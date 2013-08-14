@@ -73,7 +73,13 @@ def acquire(settings, queue):
                         settings.voltageMin) \
                        / float(settings.intervalsPerScan - 1)
 
+    # set the initial voltage
+    DAQmxReadCounterScalarU32(countTaskHandle,
+                              timeout,
+                              byref(countData), None)
 
+    # need to perform a count here that we then throw away
+    # otherwise get mysterious low first count
     DAQmxWriteAnalogScalarF64(aoTaskHandle, True, 
                               timeout,
                               aoVoltage, None)
@@ -81,6 +87,7 @@ def acquire(settings, queue):
     # begin acquisition loop
     for i in range(settings.scans):
         for j in range(settings.intervalsPerScan):
+            lastCount.value = countData.value
 
             DAQmxReadCounterScalarU32(countTaskHandle, 
                                       timeout,
@@ -98,7 +105,7 @@ def acquire(settings, queue):
             c = countData.value - lastCount.value
             queue.put( (i, j, c, aiData.value) )
 
-            lastCount.value = countData.value
+
 
 
     """
