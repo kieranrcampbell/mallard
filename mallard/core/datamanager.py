@@ -56,6 +56,9 @@ class DataManager:
             l.append(i * self.voltsPerInterval)
         self.voltArray = np.array(l)
 
+        self.lastScan = 0
+        self.running = True
+
 
 
 
@@ -72,6 +75,12 @@ class DataManager:
 
         for i in range(self.settings.scans):
 
+            # user has selected to stop capture
+            if not self.running:
+                msg = 'Stopped by user after ' + str(i) + ' scans'
+                self.globalSession.statusCallback(msg)
+                break
+
             oldCounts = counts * scale
             oldAi = ai * scale
 
@@ -84,6 +93,7 @@ class DataManager:
             for j in range(self.settings.intervalsPerScan):
 
                 (scan, interval, count, ai) = queue.get()
+                self.lastScan = scan
 
                 if i != scan or j != interval:
                     self.errorFnc( "Process sync error" )
@@ -186,3 +196,27 @@ class DataManager:
 
 
         
+    # def clearLastScan(self):
+    #     """
+    #     Zeros the last scan done when we want to stop the Capture
+    #     """
+    #     print "Removing last scan, mem loc: " + str(self)
+    #     self.rawCountData[self.lastScan] = \
+    #                             np.zeros((self.settings.intervalsPerScan,))
+    #     self.rawAIData[self.lastScan] = \
+    #                             np.zeros((self.settings.intervalsPerScan,))
+                                           
+
+    # def graphAll(self):
+    #     """
+    #     Graphs last data captured if scan
+    #     is stopped
+    #     """
+    #     counts = self.getCombinedCounts(self.lastScan - 1)
+    #     ai = self.getCombinedAI(self.lastScan - 1)
+        
+    #     self.graphManager.plot(self.voltArray, 
+    #                            self.rawCountData(self.lastScan - 1),
+    #                            self.rawAIData(self.lastScan - 1),
+    #                            counts, ai)
+

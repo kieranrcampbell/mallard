@@ -103,10 +103,12 @@ class MFrame(wx.Frame):
                                           "Current Capture Settings")
         captureKill = captureMenu.Append(wx.ID_ANY, "Kill Capture",
                                          "Kill Running Capture")
-        menubar.Append(captureMenu, '&Capture')
-
+        captureStop = captureMenu.Append(wx.ID_ANY, "Stop Capture",
+                                         "Stop capture at end of scan")
         changeName = captureMenu.Append(wx.ID_ANY, "Rename Session",
                                         "Rename current session")
+        menubar.Append(captureMenu, '&Capture')
+
 
         self.SetMenuBar(menubar)
 
@@ -138,6 +140,7 @@ class MFrame(wx.Frame):
                   captureSettings)
         self.Bind(wx.EVT_MENU, self.onChangeName, changeName)
         self.Bind(wx.EVT_MENU, self.onKillCapture, captureKill)
+        self.Bind(wx.EVT_MENU, self.onStopCapture, captureStop)
 
         # graph events
         self.Bind(wx.EVT_MENU, self.onClearGraph, clearGraph)
@@ -291,6 +294,16 @@ class MFrame(wx.Frame):
         if self.assertOpenCapture():
             if self.notebook.getOpenSession().isCapturing():
                 self.notebook.getOpenSession().killCapture()
+
+            else:
+                wx.MessageBox('No capture in progress', 'Error',
+                              wx.OK | wx.ICON_INFORMATION)
+
+    def onStopCapture(self, event):
+
+        if self.assertOpenCapture():
+            if self.notebook.getOpenSession().isCapturing():
+                self.notebook.getOpenSession().stopCapture()
 
             else:
                 wx.MessageBox('No capture in progress', 'Error',

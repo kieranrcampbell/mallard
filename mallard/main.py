@@ -22,6 +22,9 @@ def start():
     title = "Mallard - Data Acquisition for CRIS"
 
 
+    # if the stdout disappears to quickly,
+    # turn on the redirect flag and open
+    # from the command line
     app = wx.App()#redirect=False)
     frame = MFrame(None, mtitle = title, msize = size)
     app.MainLoop()

@@ -11,7 +11,7 @@ kieran.renfrew.campbell@cern.ch
 
 """
 
-from mallard.daq.acquire import acquire
+from mallard.daq.acquire import acquire, clearcard
 from datamanager import DataManager
 from settings import SessionSettings, GlobalSettings
 from filemanager import FileManager
@@ -46,6 +46,9 @@ class CaptureSession:
         # wipe it over in a new capture, so we set the
         # read only flag to true
         self.readOnly = False 
+
+        self.running = True
+        self.dmanager.running = self.running
 
 
     def setName(self, name):
@@ -101,7 +104,8 @@ class CaptureSession:
 
         # set up acquisition process and start
         self.captureProcess = Process(target=acquire,
-                                 args=(self.settings, q, ))
+                                      args=(self.settings, 
+                                            q, self.running))
         self.captureProcess.start()
 
         # set up data capture process and start
@@ -136,10 +140,17 @@ class CaptureSession:
         except:
             self.errorFnc("Could not stop capture process")
 
-        try:
-            self.dAcqThread._Thread_stop()
-        except:
-            self.errorFnc("Could not stop data manager thread")
+        self.dAcqThread._Thread__stop()
+        self.clearDevice()
+
+    def stopCapture(self):
+        """
+        Stops running capture at end of scan
+        (bit of cheat, just deletes the scan before)
+        """
+        self.running = False
+        self.dmanager.running = False
+
 
     def isCapturing(self):
         """

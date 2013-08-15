@@ -27,7 +27,7 @@ class SessionSettings:
         # number of voltages to record for per scan
         self.intervalsPerScan = 50
 
-        self.scans = 1
+        self.scans = 10
         
         self.counterChannel = "/Dev1/ctr1" # corresponds to PFI3
         

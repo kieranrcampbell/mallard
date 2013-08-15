@@ -20,7 +20,7 @@ from PyDAQmx.DAQmxFunctions import *
 from multiprocessing import Queue
 
 
-def acquire(settings, queue):
+def acquire(settings, queue, running):
     settings.sanitise() # don't want things to go wrong here
 
     # constants
@@ -86,6 +86,11 @@ def acquire(settings, queue):
 
     # begin acquisition loop
     for i in range(settings.scans):
+
+        print running
+        if not running:
+            break
+
         for j in range(settings.intervalsPerScan):
             lastCount.value = countData.value
 
@@ -118,6 +123,16 @@ def acquire(settings, queue):
     DAQmxClearTask(aiTaskHandle)
 
 
+def clearcard(countTaskHandle, aoTaskHandle, aiTaskHandle):
+    """
+    Clears all tasks from the card
+    """
+    DAQmxStopTask(countTaskHandle)
+    DAQmxStopTask(aoTaskHandle)
+    DAQmxStopTask(aiTaskHandle)
 
+    DAQmxClearTask(countTaskHandle)
+    DAQmxClearTask(aoTaskHandle)
+    DAQmxClearTask(aiTaskHandle)
     
     
