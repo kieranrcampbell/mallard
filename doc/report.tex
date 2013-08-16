@@ -49,7 +49,7 @@ Mallard has the following dependencies:
 \item PyDAQmx \url{http://pythonhosted.org/PyDAQmx/}
 \item wxPython \url{http://www.wxpython.org/}
 \end{itemize}
-Installing SciPy on Windows can be tedious, so use Anaconda (\url{https://store.continuum.io/}) which comes with it pre-installed. Don't install wxPython using \texttt{easy\_install} or \texttt{pip} as this installs some bizarre empty package. Instead, download the windows installer directly from their website (see above).
+Installing SciPy on Windows can be tedious, so use Anaconda (\url{https://store.continuum.io/}) which comes with it pre-installed. Don't install wxPython using \texttt{easy\_install} or \texttt{pip} as this installs some bizarre empty package. Instead, download the Windows installer directly from their website (see above).
 \subsection{NIDAQmx}
 NIDAQmx (\url{http://www.ni.com/dataacquisition/nidaqmx}) from National Instruments provides the base set of drivers to interface the card. The full set of functionality is only available on Windows. At time of writing the latest version was 9.7 which can be downloaded from \url{http://joule.ni.com/nidu/cds/view/p/id/3811/lang/en}. NIDAQmx installs a header file containing all the C library function definitions. The location of this file must be noted and an installation file in PyDAQmx modified accordingly (see PyDAQmx documentation for details).
 \subsection{Mallard}
@@ -57,10 +57,10 @@ NIDAQmx (\url{http://www.ni.com/dataacquisition/nidaqmx}) from National Instrume
 The source code can be downloaded (as zip or tar.gz) from the github repository \url{https://github.com/kieranrcampbell/mallard}. Extract it to a convenient folder then, from the top level \texttt{mallard} directory it can be installed by \texttt{python setup.py install}. Then mallard can be launched in the usual way, or if you prefer to use it within a python script itself it can be called using \texttt{import mallard} etc.
 
 \subsubsection{Windows executable}
-A windows installer for the python package can be downloaded from the sourceforge page \url{https://sourceforge.net/projects/mallardforcris/} which will install it as a python package.
+A Windows installer for the python package can be downloaded from the sourceforge page \url{https://sourceforge.net/projects/mallardforcris/} which will install it as a python package.
 
 \subsubsection{System Requirements}
-Due to the availability of \texttt{NI-DAQmx} Mallard only runs on windows. Despite all data being held in RAM, during system tests it was found that 500 scans with 50 intervals per scan only takes up about 150MB, so this is certainly not a limiting factor.
+Due to the availability of \texttt{NI-DAQmx} Mallard only runs on Windows. Despite all data being held in RAM, during system tests it was found that 500 scans with 50 intervals per scan only takes up about 150MB, so this is certainly not a limiting factor.
 
 \section{Use}
 \subsection{Basic Capture}
@@ -68,7 +68,7 @@ To begin Mallard, navigate to the root \texttt{mallard} folder, and start by
 \begin{verbatim}
 python -m mallard.main
 \end{verbatim}
-Due to a multiprocessing bug under python on windows we can't have the usual \_\_main\_\_.py folder to begin the module as \texttt{python mallard}. \\
+Due to a multiprocessing bug under python on Windows we can't have the usual \_\_main\_\_.py folder to begin the module as \texttt{python mallard}. \\
 
 Each acquisition session of data corresponding to a particular set of settings is known as a capture. Each capture is represented by a tab in the GUI, and a new capture can be opened by File $\rightarrow$ New Capture. Captures can be saved (see below), but cannot be reloaded into Mallard as there is currently no data analysis functionality. However, the settings for a new capture can be loaded from an old capture by File $\rightarrow$ Load Capture then selecting the capture you wish to open.\\
 
@@ -166,14 +166,21 @@ On the 6211 certain operations we need can't use an external clock, such as exte
 
 \subsection{Data Handling}
 
-\section{Troubleshooting}
-\subsection{Common Errors}
+\section{Troubleshooting / FAQ}
+\subsection{Mallard}
 \begin{description}
   \item[ImportError: Matplotlib backend\_wx and backend\_wxagg require wxversion, which was not found.] \hfill \\
   Sometimes the wxversion module is missing. Download it from \url{http://svn.wxwidgets.org/viewvc/wx/wxPython/trunk/wxversion/wxversion.py?view=co} and install in your \texttt{site-packages} directory (for Anaconda this is usually \texttt{C:/Anaconda/lib/site-packages}).
-  \item[Second] \hfill \\
-  The second item
-ts
+  \item[The stdout error window disappears before I've read what it says] \hfill \\
+  In \texttt{main.py} change the line that reads \texttt{ app = wx.App() } to read \texttt{ app = wx.App(redirect=False) } and open using the command line (cygwin).
+   \item[How do I set the default settings?] \hfill \\
+	Just edit \texttt{GlobalSettings} and \texttt{SessionSettings} in \texttt{settings.py}. They were set to the values most convenient for debugging and development.
+	\item[How do I create the Windows installer of the package?] \hfill \\
+Navigate to the root mallard directory and run
+\begin{verbatim}
+python setup.py bdist_wininst
+\end{verbatim}
+and an executable installer will be created in the \texttt{dist/} directory.
 \end{description}
 \subsection{NIDAQmx Errors}
 \begin{description}
