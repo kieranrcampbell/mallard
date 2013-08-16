@@ -150,6 +150,10 @@ class CaptureSession:
         """
         self.running = False
         self.dmanager.running = False
+        try:
+            self.captureProcess.terminate()
+        except:
+            self.errorFnc("Could not stop capture process")
 
 
     def isCapturing(self):
